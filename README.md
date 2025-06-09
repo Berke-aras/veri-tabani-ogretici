@@ -114,34 +114,6 @@ Modern ve interaktif SQL öğrenme platformu. Veri tabanı final sınavına haz�
 - Backdrop tıklama ile kapatma
 ```
 
-## 🚀 Kurulum
-
-1. **Repository'yi klonlayın**
-
-```bash
-git clone [repository-url]
-cd sql-ogrenme-rehberi
-```
-
-2. **Web server ile çalıştırın**
-
-```bash
-# Python 3
-python -m http.server 8000
-
-# Node.js (http-server)
-npx http-server
-
-# PHP
-php -S localhost:8000
-```
-
-3. **Tarayıcıda açın**
-
-```
-http://localhost:8000
-```
-
 ## 📂 Dosya Yapısı
 
 ```
@@ -182,43 +154,6 @@ sql-ogrenme-rehberi/
     - Fonksiyon türü seçin
     - Sütun adı girin
     - "Ekle" butonuna basın
-
-## 🎨 Renk Paleti
-
-```css
-Primary: #667eea - #764ba2 (Gradient)
-Success: #48bb78 - #38a169
-Warning: #f56565 - #e53e3e
-Info: #4299e1 - #3182ce
-Background: Linear gradient (135deg)
-Text: #2d3748 (Dark gray)
-```
-
-## 🔧 Özelleştirme
-
-### CSS Değişkenleri
-
-```css
-:root {
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --success-color: #48bb78;
-    --warning-color: #f56565;
-    --text-color: #2d3748;
-}
-```
-
-### JavaScript Konfigürasyonu
-
-```javascript
-// Ses ayarları
-let volume = 0.5; // 0-1 arası
-
-// Animasyon süreleri
-const ANIMATION_DURATION = 300; // ms
-
-// Modal ayarları
-const MODAL_Z_INDEX = 2000;
-```
 
 ## 🎓 Eğitim İçeriği
 
