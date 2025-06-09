@@ -151,6 +151,15 @@ function playVeriGirisiSound2() {
     audio.play().catch((e) => console.log("Ses oynatılamadı:", e));
 }
 
+function playVeriGirisiSound3() {
+    const audio = document.getElementById("veriGirisiSound3");
+    if (!audio) return;
+
+    audio.volume = volume;
+    audio.currentTime = 0;
+    audio.play().catch((e) => console.log("Ses oynatılamadı:", e));
+}
+
 // Gelişmiş Ses Oynatıcı Fonksiyonları
 let currentAudio = null;
 let updateInterval = null;
