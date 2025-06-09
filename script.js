@@ -4,10 +4,12 @@ let volume = 0.5;
 // Sayfa kaydırma kontrolü
 window.addEventListener("scroll", function () {
     const scrollTopBtn = document.getElementById("scrollTopBtn");
-    if (window.pageYOffset > 300) {
-        scrollTopBtn.classList.add("visible");
-    } else {
-        scrollTopBtn.classList.remove("visible");
+    if (scrollTopBtn) {
+        if (window.pageYOffset > 300) {
+            scrollTopBtn.classList.add("visible");
+        } else {
+            scrollTopBtn.classList.remove("visible");
+        }
     }
 });
 
@@ -22,54 +24,68 @@ function scrollToTop() {
 
 // Ses fonksiyonları
 function playSuccessSound() {
-    const audio = new Audio();
-    audio.volume = volume;
-    // Başarı sesi için frekans oluşturma
-    const audioContext = new (window.AudioContext ||
-        window.webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
+    try {
+        const audioContext = new (window.AudioContext ||
+            window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
 
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
 
-    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
-    oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
-    oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+        oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+        oscillator.frequency.setValueAtTime(
+            659.25,
+            audioContext.currentTime + 0.1
+        ); // E5
+        oscillator.frequency.setValueAtTime(
+            783.99,
+            audioContext.currentTime + 0.2
+        ); // G5
 
-    gainNode.gain.setValueAtTime(volume * 0.3, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(
-        0.01,
-        audioContext.currentTime + 0.5
-    );
+        gainNode.gain.setValueAtTime(volume * 0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(
+            0.01,
+            audioContext.currentTime + 0.5
+        );
 
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.5);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.5);
+    } catch (e) {
+        console.log("Ses oynatma hatası:", e);
+    }
 }
 
 function playClickSound() {
-    const audioContext = new (window.AudioContext ||
-        window.webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
+    try {
+        const audioContext = new (window.AudioContext ||
+            window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
 
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
 
-    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-    gainNode.gain.setValueAtTime(volume * 0.2, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(
-        0.01,
-        audioContext.currentTime + 0.1
-    );
+        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+        gainNode.gain.setValueAtTime(volume * 0.2, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(
+            0.01,
+            audioContext.currentTime + 0.1
+        );
 
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.1);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.1);
+    } catch (e) {
+        console.log("Ses oynatma hatası:", e);
+    }
 }
 
 function setVolume(value) {
     volume = value / 100;
-    document.getElementById("volumeText").textContent = value + "%";
+    const volumeText = document.getElementById("volumeText");
+    if (volumeText) {
+        volumeText.textContent = value + "%";
+    }
 }
 
 // Ses kontrol paneli toggle
@@ -79,6 +95,8 @@ function toggleAudioPanel() {
     const controls =
         document.getElementById("audioControls") ||
         document.querySelector(".audio-controls");
+
+    if (!panel || !toggle) return;
 
     if (panel.classList.contains("collapsed")) {
         // Açılıyor
@@ -97,21 +115,12 @@ function toggleAudioPanel() {
     }
 }
 
-// Sayfa yüklendiğinde ses kontrollerini küçük başlat
-window.addEventListener("load", function () {
-    const panel = document.getElementById("audioPanel");
-    const toggle = document.getElementById("audioToggle");
-
-    if (panel && toggle) {
-        panel.classList.add("collapsed");
-        toggle.innerHTML = '<i class="fas fa-volume-up"></i>';
-    }
-});
-
 // Ses dersleri menüsü toggle
 function toggleAudioMenu() {
     const menu = document.getElementById("audioLessonsMenu");
     const btn = document.getElementById("audioMenuBtn");
+
+    if (!menu || !btn) return;
 
     menu.classList.toggle("show");
 
@@ -126,6 +135,8 @@ function toggleAudioMenu() {
 
 function playVeriGirisiSound() {
     const audio = document.getElementById("veriGirisiSound");
+    if (!audio) return;
+
     audio.volume = volume;
     audio.currentTime = 0;
     audio.play().catch((e) => console.log("Ses oynatılamadı:", e));
@@ -133,6 +144,8 @@ function playVeriGirisiSound() {
 
 function playVeriGirisiSound2() {
     const audio = document.getElementById("veriGirisiSound2");
+    if (!audio) return;
+
     audio.volume = volume;
     audio.currentTime = 0;
     audio.play().catch((e) => console.log("Ses oynatılamadı:", e));
@@ -153,18 +166,28 @@ function loadLesson(audioId, title) {
 
     // Yeni sesi yükle
     currentAudio = document.getElementById(audioId);
+    if (!currentAudio) {
+        console.error("Audio element bulunamadı:", audioId);
+        return;
+    }
+
     currentAudio.volume = volume;
 
     // Player'ı göster
-    document.getElementById("audioPlayer").style.display = "block";
-    document.getElementById("currentLessonTitle").textContent = title;
+    const audioPlayer = document.getElementById("audioPlayer");
+    const currentLessonTitle = document.getElementById("currentLessonTitle");
+
+    if (audioPlayer) audioPlayer.style.display = "block";
+    if (currentLessonTitle) currentLessonTitle.textContent = title;
 
     // Event listener'ları ekle
     currentAudio.addEventListener("loadedmetadata", updateTotalTime);
     currentAudio.addEventListener("timeupdate", updateProgress);
     currentAudio.addEventListener("ended", () => {
-        document.getElementById("playPauseBtn").innerHTML =
-            '<i class="fas fa-play"></i>';
+        const playPauseBtn = document.getElementById("playPauseBtn");
+        if (playPauseBtn) {
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        }
         currentAudio.currentTime = 0;
         updateProgress();
     });
@@ -172,8 +195,10 @@ function loadLesson(audioId, title) {
     // Başlangıç değerleri
     updateTotalTime();
     updateProgress();
-    document.getElementById("playPauseBtn").innerHTML =
-        '<i class="fas fa-play"></i>';
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    if (playPauseBtn) {
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+    }
 }
 
 function togglePlayPause() {
@@ -181,15 +206,16 @@ function togglePlayPause() {
 
     playClickSound();
 
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    if (!playPauseBtn) return;
+
     if (currentAudio.paused) {
-        currentAudio.play();
-        document.getElementById("playPauseBtn").innerHTML =
-            '<i class="fas fa-pause"></i>';
+        currentAudio.play().catch((e) => console.log("Ses oynatma hatası:", e));
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
         startProgressUpdates();
     } else {
         currentAudio.pause();
-        document.getElementById("playPauseBtn").innerHTML =
-            '<i class="fas fa-play"></i>';
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
         stopProgressUpdates();
     }
 }
@@ -200,8 +226,10 @@ function stopAudio() {
     playClickSound();
     currentAudio.pause();
     currentAudio.currentTime = 0;
-    document.getElementById("playPauseBtn").innerHTML =
-        '<i class="fas fa-play"></i>';
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    if (playPauseBtn) {
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+    }
     updateProgress();
     stopProgressUpdates();
 }
@@ -219,7 +247,7 @@ function skipForward() {
 
     playClickSound();
     currentAudio.currentTime = Math.min(
-        currentAudio.duration,
+        currentAudio.duration || 0,
         currentAudio.currentTime + 10
     );
     updateProgress();
@@ -234,7 +262,10 @@ function changeSpeed(speed) {
 
 function setLessonVolume(value) {
     volume = value / 100;
-    document.getElementById("lessonVolumeText").textContent = value + "%";
+    const lessonVolumeText = document.getElementById("lessonVolumeText");
+    if (lessonVolumeText) {
+        lessonVolumeText.textContent = value + "%";
+    }
     if (currentAudio) {
         currentAudio.volume = volume;
     }
@@ -252,29 +283,34 @@ function updateProgress() {
     if (!currentAudio || !currentAudio.duration) return;
 
     const progress = (currentAudio.currentTime / currentAudio.duration) * 100;
-    document.getElementById("progressFill").style.width = progress + "%";
-    document.getElementById("progressSlider").value = progress;
+    const progressFill = document.getElementById("progressFill");
+    const progressSlider = document.getElementById("progressSlider");
+    const currentTime = document.getElementById("currentTime");
+
+    if (progressFill) progressFill.style.width = progress + "%";
+    if (progressSlider) progressSlider.value = progress;
 
     // Şu anki zamanı güncelle
-    const currentMinutes = Math.floor(currentAudio.currentTime / 60);
-    const currentSeconds = Math.floor(currentAudio.currentTime % 60);
-    document.getElementById(
-        "currentTime"
-    ).textContent = `${currentMinutes}:${currentSeconds
-        .toString()
-        .padStart(2, "0")}`;
+    if (currentTime) {
+        const currentMinutes = Math.floor(currentAudio.currentTime / 60);
+        const currentSeconds = Math.floor(currentAudio.currentTime % 60);
+        currentTime.textContent = `${currentMinutes}:${currentSeconds
+            .toString()
+            .padStart(2, "0")}`;
+    }
 }
 
 function updateTotalTime() {
     if (!currentAudio || !currentAudio.duration) return;
 
-    const totalMinutes = Math.floor(currentAudio.duration / 60);
-    const totalSeconds = Math.floor(currentAudio.duration % 60);
-    document.getElementById(
-        "totalTime"
-    ).textContent = `${totalMinutes}:${totalSeconds
-        .toString()
-        .padStart(2, "0")}`;
+    const totalTime = document.getElementById("totalTime");
+    if (totalTime) {
+        const totalMinutes = Math.floor(currentAudio.duration / 60);
+        const totalSeconds = Math.floor(currentAudio.duration % 60);
+        totalTime.textContent = `${totalMinutes}:${totalSeconds
+            .toString()
+            .padStart(2, "0")}`;
+    }
 }
 
 function startProgressUpdates() {
@@ -297,7 +333,10 @@ function closePlayer() {
         currentAudio.currentTime = 0;
     }
 
-    document.getElementById("audioPlayer").style.display = "none";
+    const audioPlayer = document.getElementById("audioPlayer");
+    if (audioPlayer) {
+        audioPlayer.style.display = "none";
+    }
     stopProgressUpdates();
 }
 
@@ -305,6 +344,8 @@ function closePlayer() {
 function toggleSchemaViewer() {
     playClickSound();
     const modal = document.getElementById("schemaModal");
+    if (!modal) return;
+
     modal.classList.toggle("show");
 
     // Escape tuşu ile kapatma
@@ -324,7 +365,7 @@ function closeModalOnBackdrop(event) {
 function handleModalEscape(event) {
     if (event.key === "Escape") {
         const modal = document.getElementById("schemaModal");
-        if (modal.classList.contains("show")) {
+        if (modal && modal.classList.contains("show")) {
             toggleSchemaViewer();
         }
     }
@@ -334,8 +375,11 @@ function handleModalEscape(event) {
 let queryTokens = [];
 
 function toggleToken(element) {
+    if (!element) return;
+
     playClickSound();
     const token = element.getAttribute("data-token");
+    if (!token) return;
 
     if (element.classList.contains("selected")) {
         // Remove token
@@ -363,13 +407,15 @@ function updateQueryDisplay() {
     const queryZone = document.getElementById("queryTokens");
     const queryPreview = document.getElementById("queryPreview");
 
+    if (!queryZone || !queryPreview) return;
+
     if (queryTokens.length === 0) {
         queryZone.innerHTML = `
-                                <p style="color: rgba(255,255,255,0.7); text-align: center; width: 100%; margin: 60px 0;">
-                                    🎮 Yukarıdaki komutlara tıklayarak SQL sorgunu oluştur!<br>
-                                    <small>💡 İpucu: SELECT ve FROM ile başla</small>
-                                </p>
-                            `;
+            <p style="color: rgba(255,255,255,0.7); text-align: center; width: 100%; margin: 60px 0;">
+                🎮 Yukarıdaki komutlara tıklayarak SQL sorgunu oluştur!<br>
+                <small>💡 İpucu: SELECT ve FROM ile başla</small>
+            </p>
+        `;
         queryPreview.innerHTML =
             '<span style="color: rgba(255,255,255,0.7);">Sorgun burada görünecek...</span>';
         return;
@@ -379,11 +425,11 @@ function updateQueryDisplay() {
     let tokensHTML = "";
     queryTokens.forEach((token, index) => {
         tokensHTML += `
-                                <div class="query-token">
-                                    <span>${token}</span>
-                                    <button class="token-remove" onclick="removeToken(${index})">×</button>
-                                </div>
-                            `;
+            <div class="query-token">
+                <span>${token}</span>
+                <button class="token-remove" onclick="removeToken(${index})">×</button>
+            </div>
+        `;
     });
 
     queryZone.innerHTML = tokensHTML;
@@ -395,21 +441,29 @@ function updateQueryDisplay() {
 
 function removeToken(index) {
     playClickSound();
+
+    if (index < 0 || index >= queryTokens.length) return;
+
     const removedToken = queryTokens[index];
     queryTokens.splice(index, 1);
 
-    // Remove selected class from corresponding button
-    const buttons = document.querySelectorAll(".sql-block");
-    buttons.forEach((button) => {
-        if (button.getAttribute("data-token") === removedToken) {
-            button.classList.remove("selected");
-        }
-    });
+    // Remove selected class from corresponding button, but only if that token
+    // is no longer present in the query.
+    if (!queryTokens.includes(removedToken)) {
+        const buttons = document.querySelectorAll(".sql-block");
+        buttons.forEach((button) => {
+            if (button.getAttribute("data-token") === removedToken) {
+                button.classList.remove("selected");
+            }
+        });
+    }
 
     updateQueryDisplay();
 }
 
 function formatQuery(query) {
+    if (!query) return "";
+
     // Basic SQL formatting with HTML line breaks
     return query
         .replace(/SELECT/g, "<br>SELECT")
@@ -426,9 +480,13 @@ function formatQuery(query) {
 }
 
 function runQuery() {
-    playSuccessSound();
     const resultTable = document.getElementById("resultTable");
     const successMessage = document.getElementById("successMessage");
+
+    if (!resultTable) {
+        console.error("Result table element bulunamadı");
+        return;
+    }
 
     if (queryTokens.length === 0) {
         playClickSound();
@@ -436,28 +494,30 @@ function runQuery() {
         return;
     }
 
+    playSuccessSound();
+
     // Başarı mesajı göster
-    successMessage.classList.add("show");
-    setTimeout(() => {
-        successMessage.classList.remove("show");
-    }, 3000);
+    if (successMessage) {
+        successMessage.classList.add("show");
+        setTimeout(() => {
+            successMessage.classList.remove("show");
+        }, 3000);
+    }
 
     // Daha zengin örnek sonuç tabloları oluştur
     const sampleResults = generateSampleResults();
 
     resultTable.innerHTML = `
-                            <div class="table-visual" style="width: 100%; background: white; color: #333;">
-                                ${sampleResults.html}
-                            </div>
-                            <div style="padding: 15px; text-align: center; color: #48bb78; font-weight: bold; background: rgba(72, 187, 120, 0.1); border-radius: 8px; margin-top: 10px;">
-                                ✅ Sorgu başarıyla çalıştırıldı! ${
-                                    sampleResults.count
-                                } kayıt bulundu.
-                                <br><small>⏱️ Çalışma süresi: ${Math.random().toFixed(
-                                    2
-                                )} ms</small>
-                            </div>
-                        `;
+        <div class="table-visual" style="width: 100%; background: white; color: #333;">
+            ${sampleResults.html}
+        </div>
+        <div style="padding: 15px; text-align: center; color: #48bb78; font-weight: bold; background: rgba(72, 187, 120, 0.1); border-radius: 8px; margin-top: 10px;">
+            ✅ Sorgu başarıyla çalıştırıldı! ${
+                sampleResults.count
+            } kayıt bulundu.
+            <br><small>⏱️ Çalışma süresi: ${Math.random().toFixed(2)} ms</small>
+        </div>
+    `;
 }
 
 function generateSampleResults() {
@@ -466,7 +526,28 @@ function generateSampleResults() {
     let columns = [];
 
     // Analyze query to generate appropriate results
-    if (query.includes("count")) {
+    // Prioritize GROUP BY as it changes the structure of the output
+    if (query.includes("group by")) {
+        if (query.includes("sehir")) {
+            columns = ["Şehir", "Sayı"];
+            results = [
+                { Şehir: "Ankara", Sayı: 25 },
+                { Şehir: "İstanbul", Sayı: 35 },
+                { Şehir: "İzmir", Sayı: 18 },
+            ];
+        } else {
+            // Generic fallback for other GROUP BY queries
+            columns = ["Grup", "Sonuç"];
+            results = [
+                { Grup: "A Grubu", Sonuç: Math.floor(Math.random() * 100) },
+                { Grup: "B Grubu", Sonuç: Math.floor(Math.random() * 100) },
+                { Grup: "C Grubu", Sonuç: Math.floor(Math.random() * 100) },
+            ];
+        }
+    } else if (query.includes("count(*)")) {
+        columns = ["COUNT(*)"];
+        results = [{ "COUNT(*)": Math.floor(Math.random() * 100) + 10 }];
+    } else if (query.includes("count")) {
         columns = ["Sayım"];
         results = [{ Sayım: Math.floor(Math.random() * 100) + 10 }];
     } else if (query.includes("avg")) {
@@ -478,15 +559,9 @@ function generateSampleResults() {
     } else if (query.includes("min")) {
         columns = ["Minimum"];
         results = [{ Minimum: Math.floor(Math.random() * 50) + 20 }];
-    } else if (query.includes("group by")) {
-        if (query.includes("sehir")) {
-            columns = ["Şehir", "Sayı"];
-            results = [
-                { Şehir: "Ankara", Sayı: 25 },
-                { Şehir: "İstanbul", Sayı: 35 },
-                { Şehir: "İzmir", Sayı: 18 },
-            ];
-        }
+    } else if (query.includes("sum")) {
+        columns = ["Toplam"];
+        results = [{ Toplam: Math.floor(Math.random() * 500) + 100 }];
     } else {
         // Default student results
         columns = ["Ad", "Soyad", "Şehir", "Yaş"];
@@ -532,7 +607,7 @@ function generateSampleResults() {
     results.forEach((row) => {
         html += '<div class="table-row">';
         columns.forEach((col) => {
-            html += `<div class="table-cell">${row[col]}</div>`;
+            html += `<div class="table-cell">${row[col] || ""}</div>`;
         });
         html += "</div>";
     });
@@ -553,12 +628,14 @@ function clearQuery() {
     updateQueryDisplay();
 
     const resultTable = document.getElementById("resultTable");
-    resultTable.innerHTML = `
-                            <div style="padding: 40px 20px; text-align: center; color: rgba(255,255,255,0.7);">
-                                📊 Sorguyu çalıştır ve sonuçları gör!<br>
-                                <small>💡 SELECT ve FROM ekleyerek başla</small>
-                            </div>
-                        `;
+    if (resultTable) {
+        resultTable.innerHTML = `
+            <div style="padding: 40px 20px; text-align: center; color: rgba(255,255,255,0.7);">
+                📊 Sorguyu çalıştır ve sonuçları gör!<br>
+                <small>💡 SELECT ve FROM ekleyerek başla</small>
+            </div>
+        `;
+    }
 }
 
 function generateRandomQuery() {
@@ -578,7 +655,7 @@ function generateRandomQuery() {
             "GROUP BY",
             "Sehir",
             "ORDER BY",
-            "COUNT(*) DESC",
+            "Sehir DESC",
         ],
         ["SELECT", "AVG(FinalNotu)", "FROM", "Notlar"],
         [
@@ -587,7 +664,7 @@ function generateRandomQuery() {
             "FROM",
             "Ogrenciler",
             "WHERE",
-            "Sehir = 'Istanbul'",
+            "Sehir = 'İstanbul'",
             "ORDER BY",
             "Ad ASC",
         ],
@@ -623,11 +700,19 @@ function addCustomAggregate() {
     const funcSelect = document.getElementById("aggregateFunction");
     const columnInput = document.getElementById("aggregateColumn");
 
+    if (!funcSelect || !columnInput) {
+        console.error("Aggregate function elements bulunamadı");
+        return;
+    }
+
     const func = funcSelect.value;
     const column = columnInput.value.trim();
 
     if (!column) {
-        alert("❌ Lütfen bir sütun adı girin!");
+        alert(
+            "❌ Lütfen bir sütun adı girin!\n\nÖrnekler: FinalNotu, Yas, Kredi, * (COUNT için)"
+        );
+        columnInput.focus();
         return;
     }
 
@@ -637,17 +722,6 @@ function addCustomAggregate() {
     } else {
         token = `${func}(${column})`;
     }
-
-    // Create a temporary button-like element and toggle it
-    const tempElement = {
-        getAttribute: () => token,
-        classList: {
-            contains: () => false,
-            add: () => {},
-            remove: () => {},
-        },
-        style: {},
-    };
 
     // Add to tokens
     queryTokens.push(token);
@@ -678,62 +752,76 @@ function quickAddAggregate(func, column) {
     playSuccessSound();
 }
 
-// Allow Enter key in aggregate input
+// DOM yüklendiğinde çalışacak fonksiyonlar
 document.addEventListener("DOMContentLoaded", function () {
-    // Add event listener for Enter key in aggregate input (will be added after DOM loads)
-    setTimeout(() => {
-        const aggregateInput = document.getElementById("aggregateColumn");
-        if (aggregateInput) {
-            aggregateInput.addEventListener("keypress", function (e) {
-                if (e.key === "Enter") {
-                    e.preventDefault();
-                    addCustomAggregate();
-                }
-            });
-        }
-    }, 500);
-});
+    // Ses kontrollerini küçük başlat
+    const panel = document.getElementById("audioPanel");
+    const toggle = document.getElementById("audioToggle");
 
-// Smooth scrolling
-document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-    anchor.addEventListener("click", function (e) {
-        e.preventDefault();
-        playClickSound();
-        const target = document.querySelector(this.getAttribute("href"));
-        if (target) {
-            target.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-            });
-        }
+    if (panel && toggle) {
+        panel.classList.add("collapsed");
+        toggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+    }
+
+    // Add event listener for Enter key in aggregate input
+    const aggregateInput = document.getElementById("aggregateColumn");
+    if (aggregateInput) {
+        aggregateInput.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                addCustomAggregate();
+            }
+        });
+    }
+
+    // Smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            playClickSound();
+            const target = document.querySelector(this.getAttribute("href"));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
+            }
+        });
     });
-});
 
-// Hover efektleri için ek animasyonlar
-document.querySelectorAll(".section").forEach((section) => {
-    section.addEventListener("mouseenter", function () {
-        this.style.transform = "translateY(-5px)";
+    // Hover efektleri için ek animasyonlar
+    document.querySelectorAll(".section").forEach((section) => {
+        section.addEventListener("mouseenter", function () {
+            this.style.transform = "translateY(-5px)";
+        });
+
+        section.addEventListener("mouseleave", function () {
+            this.style.transform = "translateY(0)";
+        });
     });
 
-    section.addEventListener("mouseleave", function () {
-        this.style.transform = "translateY(0)";
-    });
-});
+    // SQL komutlarına click to copy özelliği
+    document.querySelectorAll(".sql-command").forEach((cmd) => {
+        cmd.style.cursor = "pointer";
+        cmd.title = "Kopyalamak için tıkla";
 
-// SQL komutlarına click to copy özelliği
-document.querySelectorAll(".sql-command").forEach((cmd) => {
-    cmd.style.cursor = "pointer";
-    cmd.title = "Kopyalamak için tıkla";
-
-    cmd.addEventListener("click", function () {
-        playClickSound();
-        const text = this.innerText;
-        navigator.clipboard.writeText(text).then(() => {
-            const originalBg = this.style.background;
-            this.style.background = "#48bb78";
-            setTimeout(() => {
-                this.style.background = originalBg;
-            }, 500);
+        cmd.addEventListener("click", function () {
+            playClickSound();
+            const text = this.innerText;
+            if (navigator.clipboard) {
+                navigator.clipboard
+                    .writeText(text)
+                    .then(() => {
+                        const originalBg = this.style.background;
+                        this.style.background = "#48bb78";
+                        setTimeout(() => {
+                            this.style.background = originalBg;
+                        }, 500);
+                    })
+                    .catch((e) => {
+                        console.log("Kopyalama hatası:", e);
+                    });
+            }
         });
     });
 });
