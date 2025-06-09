@@ -1,0 +1,3177 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Öğrenme Rehberi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .header {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            color: #4a5568;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #2d3748;
+            margin-bottom: 12px;
+        }
+
+        .section ul,
+        .section ol {
+            margin-left: 20px;
+            line-height: 1.7;
+            color: #2d3748;
+        }
+
+        .section li {
+            margin-bottom: 8px;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .section h2 {
+            color: #2d3748;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            line-height: 1.3;
+            word-wrap: break-word;
+        }
+
+        .database-visual {
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .table-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .table-visual {
+            background: white;
+            border: 2px solid #4299e1;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            background: #4299e1;
+            color: white;
+            padding: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .table-row {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table-cell {
+            padding: 8px 12px;
+            border-right: 1px solid #e2e8f0;
+            flex: 1;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .table-cell:last-child {
+            border-right: none;
+        }
+
+        .sql-command {
+            background: #1a202c;
+            color: #68d391;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            position: relative;
+            border-left: 4px solid #68d391;
+        }
+
+        .sql-command::before {
+            content: "SQL";
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: #68d391;
+            color: #1a202c;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .example-box {
+            background: #f0fff4;
+            border: 2px solid #68d391;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            color: #2d3748;
+            line-height: 1.7;
+        }
+
+        .warning-box {
+            background: #fed7d7;
+            border: 2px solid #f56565;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            color: #2d3748;
+            line-height: 1.7;
+        }
+
+        .tip-box {
+            background: #bee3f8;
+            border: 2px solid #3182ce;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            color: #2d3748;
+            line-height: 1.7;
+        }
+
+        .interactive-demo {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .demo-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .demo-button {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .demo-button:hover {
+            background: #38a169;
+        }
+
+        .result-table {
+            background: white;
+            color: #333;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .crud-operations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .crud-item {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .crud-item:hover {
+            border-color: #4299e1;
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .crud-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .join-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .join-table {
+            background: white;
+            border: 2px solid #4299e1;
+            border-radius: 8px;
+            padding: 15px;
+            min-width: 150px;
+        }
+
+        .join-arrow {
+            font-size: 2rem;
+            color: #4299e1;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            border-radius: 20px;
+            height: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            height: 100%;
+            border-radius: 20px;
+            transition: width 2s ease;
+        }
+
+        .nav-menu {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-item {
+            background: #667eea;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .nav-item:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .table-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .join-visual {
+                flex-direction: column;
+            }
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .syntax-highlight .keyword {
+            color: #f92672;
+            font-weight: bold;
+        }
+
+        .syntax-highlight .string {
+            color: #a6e22e;
+        }
+
+        .syntax-highlight .number {
+            color: #ae81ff;
+        }
+
+        .syntax-highlight .comment {
+            color: #75715e;
+            font-style: italic;
+        }
+
+        /* İnteraktif Çalışma Alanı */
+        .playground {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .playground-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .playground-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .query-builder {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .clickable-commands {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .sql-block {
+            background: #48bb78;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            text-align: center;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sql-block:hover {
+            background: #38a169;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .sql-block:active {
+            transform: translateY(0);
+        }
+
+        .sql-block.selected {
+            background: #f56565;
+            border-color: #e53e3e;
+        }
+
+        .sql-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .sql-block:hover::before {
+            left: 100%;
+        }
+
+        .query-display-zone {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            min-height: 200px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+        }
+
+        .query-tokens {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            min-height: 160px;
+        }
+
+        .query-token {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            padding: 8px 12px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .query-token:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .token-remove {
+            background: #f56565;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-preview {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .query-preview-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .result-table-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        /* Hızlı Ekleme Butonları */
+        .quick-add-btn {
+            background: rgba(104, 211, 145, 0.8);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .quick-add-btn:hover {
+            background: rgba(104, 211, 145, 1);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .quick-add-btn:active {
+            transform: translateY(0);
+        }
+
+        .preview-table {
+            background: white;
+            color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-run {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-run:hover {
+            background: #38a169;
+        }
+
+        .btn-clear {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background: #e53e3e;
+        }
+
+        .btn-sound {
+            background: #4299e1;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-sound:hover {
+            background: #3182ce;
+        }
+
+        /* Ses Kontrolleri */
+        .audio-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            min-width: 200px;
+            transition: all 0.3s ease;
+        }
+
+        .audio-controls.minimized {
+            width: 60px;
+            height: 60px;
+            padding: 8px;
+            min-width: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .audio-controls.minimized .audio-header {
+            justify-content: center;
+        }
+
+        .audio-controls.minimized .audio-header h4 {
+            display: none;
+        }
+
+        .audio-controls.minimized #audioToggle {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .audio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+        }
+
+        .audio-panel {
+            max-height: 200px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .audio-panel.collapsed {
+            max-height: 0;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .volume-slider {
+            width: 100px;
+        }
+
+        /* Ses Dersleri Menüsü */
+        .audio-lessons {
+            background: #e2e8f0 !important;
+            color: #2d3748 !important;
+            cursor: pointer;
+        }
+
+        .audio-lessons:hover {
+            background: #cbd5e0 !important;
+        }
+
+        .audio-lessons-menu {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 10px 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .audio-lessons-menu.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Ses Oynatıcı Stilleri */
+        .lesson-list {
+            margin-bottom: 15px;
+        }
+
+        .lesson-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lesson-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .lesson-item span {
+            display: block;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .lesson-item small {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .audio-player {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .player-header h4 {
+            margin: 0;
+            color: #2d3748;
+            font-size: 1.1rem;
+        }
+
+        .close-player {
+            background: #f56565;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-player:hover {
+            background: #e53e3e;
+        }
+
+        .progress-container {
+            margin-bottom: 15px;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #666;
+            font-family: 'Courier New', monospace;
+        }
+
+        .progress-bar-audio {
+            position: relative;
+            background: #e2e8f0;
+            border-radius: 20px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill-audio {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.1s ease;
+            width: 0%;
+        }
+
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .control-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .play-pause {
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            background: #48bb78;
+        }
+
+        .play-pause:hover {
+            background: #38a169;
+        }
+
+        .player-settings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .speed-control,
+        .volume-control-player {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #2d3748;
+        }
+
+        .speed-control select {
+            padding: 4px 8px;
+            border-radius: 5px;
+            border: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .volume-control-player input {
+            width: 80px;
+        }
+
+        /* Database Schema Modal */
+        .schema-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .schema-modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .schema-modal-content {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 95vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            color: white;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .schema-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .schema-tables {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .schema-table {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .schema-table h5 {
+            color: #68d391;
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .schema-columns {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .schema-column {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .schema-column:last-child {
+            border-bottom: none;
+        }
+
+        .column-name {
+            font-weight: bold;
+            color: #68d391;
+        }
+
+        .column-type {
+            color: #fbb6ce;
+            margin-left: 10px;
+        }
+
+        .sample-data {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+
+        /* Yukarı Çık Butonu */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(100px);
+        }
+
+        .scroll-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-to-top:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .section h2 {
+                font-size: 1.5rem;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .nav-item {
+                width: 100%;
+                min-width: auto;
+                padding: 12px 16px;
+                font-size: 0.9rem;
+            }
+
+            .playground-content {
+                grid-template-columns: 1fr;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .clickable-commands {
+                grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)) !important;
+                gap: 8px;
+            }
+
+            .sql-block {
+                font-size: 0.8rem;
+                padding: 8px 12px;
+                text-align: center;
+            }
+
+            .query-tokens {
+                min-height: 120px;
+            }
+
+            .audio-controls {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-bottom: 20px;
+                width: 100%;
+                min-width: auto;
+            }
+
+            .scroll-to-top {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            /* Ses oynatıcı mobil uyumluluğu */
+            .audio-player {
+                padding: 15px;
+            }
+
+            .player-controls {
+                gap: 8px;
+            }
+
+            .control-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .play-pause {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .player-settings {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            /* Schema modal mobil uyumluluğu */
+            .schema-modal {
+                padding: 10px;
+            }
+
+            .schema-modal-content {
+                max-width: 100%;
+                max-height: 95vh;
+                padding: 20px;
+            }
+
+            .schema-tables {
+                grid-template-columns: 1fr;
+            }
+
+            .schema-table {
+                margin-bottom: 15px;
+            }
+
+            /* Table görselleri mobil için */
+            .table-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .table-visual {
+                width: 100%;
+                max-width: 350px;
+                margin-bottom: 15px;
+            }
+
+            .table-cell {
+                font-size: 0.8rem;
+                padding: 6px 8px;
+            }
+
+            /* CRUD operations grid */
+            .crud-operations {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+
+            /* JOIN visual */
+            .join-visual {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .join-arrow {
+                font-size: 1.5rem;
+                transform: rotate(90deg);
+            }
+        }
+
+        /* Çok küçük ekranlar için ek ayarlar */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .section {
+                padding: 15px;
+            }
+
+            .sql-block {
+                font-size: 0.75rem;
+                padding: 6px 10px;
+            }
+
+            .clickable-commands {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)) !important;
+            }
+
+            .nav-item {
+                font-size: 0.85rem;
+                padding: 10px 12px;
+            }
+
+            .control-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+
+            .play-pause {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Animasyonlar */
+        @keyframes bounce {
+
+            0%,
+            20%,
+            53%,
+            80%,
+            100% {
+                transform: translate3d(0, 0, 0);
+            }
+
+            40%,
+            43% {
+                transform: translate3d(0, -10px, 0);
+            }
+
+            70% {
+                transform: translate3d(0, -5px, 0);
+            }
+
+            90% {
+                transform: translate3d(0, -2px, 0);
+            }
+        }
+
+        .bounce {
+            animation: bounce 1s;
+        }
+
+        /* Başarı Mesajı */
+        .success-message {
+            background: #48bb78;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .success-message.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Ses Kontrolleri -->
+    <div class="audio-controls" id="audioControls">
+        <div class="audio-header" onclick="toggleAudioPanel()">
+            <h4 style="margin: 0; color: #2d3748; cursor: pointer;"><i class="fas fa-volume-up"></i> Ses Kontrolleri
+            </h4>
+            <span id="audioToggle" style="font-size: 1.2rem; cursor: pointer;"><i class="fas fa-play"></i></span>
+        </div>
+        <div class="audio-panel collapsed" id="audioPanel">
+            <div class="volume-control">
+                <span><i class="fas fa-volume-up"></i></span>
+                <input type="range" class="volume-slider" min="0" max="100" value="50" onchange="setVolume(this.value)">
+                <span id="volumeText">50%</span>
+            </div>
+            <button class="btn btn-sound" onclick="playSuccessSound()"
+                style="font-size: 0.8rem; padding: 6px 12px; margin-top: 8px;">
+                <i class="fas fa-music"></i> Test Sesi
+            </button>
+        </div>
+    </div>
+
+    <!-- Yukarı Çık Butonu -->
+    <button class="scroll-to-top" onclick="scrollToTop()" id="scrollTopBtn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Ses Dosyaları -->
+    <audio id="successSound" preload="auto">
+        <source
+            src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJOcXU1VYWWkjJOQhmFCfHmLXXiGfV6JgHB5hn+RdGqTZ2JXaFFkVWqCf3+LfnqKgHVldHxjYGxQeY6DhX1mdHNJeYpjY2+VgWd/iHGCgGJ5hH6KhXV9fW1xe2dYaGZlZ2yMhXqFjYN3en2Ac4N/eXmOhXN5eXhsbXVyX2tmbGF1Y32LhJSAgoKBaGWDa3qOiYB+aGWEe31uamhxcH+EgXVmaGpxY292cH2GgHptgHNxc3+AanBvZm1xdH6BhHmBfYB0eH14d2lpe2pocH59gHJ7e3dvd316eXRwe3V0dG13bGl3cn+GfZOCgHyDfnZxeXN0dHB2d2JsgX15fn9+fYOGf3F2eXhrZm1rbX6BgHSEfH2Cf3hseXh6eWZrZmFmeXaDhYJ/eHZ6c35zdHRrdnB2aWlofIWDj4KBfnqGf3lqaXJ2anN1bWNzenGFgXeEgXp4eXd0cnl1anJxemhqe3t/goOGgnyAe3V3eHN5ennGf3yJhYCBfIB+eXZ/fHFyfXtpZWdscHyDgYWDfH+Dgnt1d3J1b3N4Z2BremGKgXyEfH1/eXx5d3Z0aWdre3d9goCBdH6Afnl2eHR5dnJ5bmJsfW+BgYKFfH2Bf3d0dnJzczz..."
+            type="audio/wav">
+    </audio>
+    <audio id="clickSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAIAAEBAAEA4AADA1gIAZK..." type="audio/wav">
+    </audio>
+
+    <!-- Konu Anlatım Sesları -->
+    <audio id="veriGirisiSound" preload="auto">
+        <source src="SQL Öğrenci Veri Girişi İşlemleri.wav" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="veriGirisiSound2" preload="auto">
+        <source src="SQL Öğrenci Veri Girişi İşlemleri (1).wav" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-database"></i> SQL Öğrenme Rehberi</h1>
+            <p style="font-size: 1.2rem; color: #666;">Veri Tabanı Finalin İçin Kapsamlı Görsel Kılavuz</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="nav-menu">
+            <a href="#basics" class="nav-item"><i class="fas fa-book"></i> Temel Kavramlar</a>
+            <a href="#crud" class="nav-item"><i class="fas fa-edit"></i> CRUD İşlemleri</a>
+            <a href="#playground" class="nav-item"><i class="fas fa-gamepad"></i> İnteraktif Çalışma</a>
+            <a href="#select" class="nav-item"><i class="fas fa-search"></i> SELECT & Filtreleme</a>
+            <a href="#functions" class="nav-item"><i class="fas fa-chart-bar"></i> Aggregate Fonksiyonlar</a>
+            <a href="#joins" class="nav-item"><i class="fas fa-link"></i> JOIN İşlemleri</a>
+            <a href="#advanced" class="nav-item"><i class="fas fa-bolt"></i> İleri Seviye</a>
+            <a href="#tips" class="nav-item"><i class="fas fa-lightbulb"></i> Sınav İpuçları</a>
+            <div class="nav-item audio-lessons" onclick="toggleAudioMenu()" id="audioMenuBtn"><i
+                    class="fas fa-headphones"></i> Ses Dersleri <i class="fas fa-chevron-up"></i></div>
+        </div>
+
+        <!-- Ses Dersleri Menüsü -->
+        <div class="audio-lessons-menu show" id="audioLessonsMenu">
+            <div class="audio-lesson-item">
+                <!-- Ses Ders Listesi -->
+                <div class="lesson-list">
+                    <div class="lesson-item" onclick="loadLesson('veriGirisiSound', 'Veri Girişi İşlemleri - Bölüm 1')">
+                        <span><i class="fas fa-book"></i> Veri Girişi İşlemleri - Bölüm 1</span>
+                        <small>SQL temel kavramlar</small>
+                    </div>
+                    <div class="lesson-item"
+                        onclick="loadLesson('veriGirisiSound2', 'Veri Girişi İşlemleri - Bölüm 2')">
+                        <span><i class="fas fa-book-open"></i> Veri Girişi İşlemleri - Bölüm 2</span>
+                        <small>İleri düzey konular</small>
+                    </div>
+                </div>
+
+                <!-- Ses Oynatıcı Kontrolleri -->
+                <div class="audio-player" id="audioPlayer" style="display: none;">
+                    <div class="player-header">
+                        <h4 id="currentLessonTitle">Ders yüklenmedi</h4>
+                        <button class="close-player" onclick="closePlayer()">✕</button>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-container">
+                        <div class="time-display">
+                            <span id="currentTime">0:00</span>
+                            <span id="totalTime">0:00</span>
+                        </div>
+                        <div class="progress-bar-audio">
+                            <div class="progress-fill-audio" id="progressFill"></div>
+                            <input type="range" id="progressSlider" min="0" max="100" value="0"
+                                onchange="seekAudio(this.value)"
+                                style="width: 100%; position: absolute; opacity: 0; cursor: pointer;">
+                        </div>
+                    </div>
+
+                    <!-- Kontrol Butonları -->
+                    <div class="player-controls">
+                        <button class="control-btn" onclick="skipBackward()"><i class="fas fa-backward"></i></button>
+                        <button class="control-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()"><i
+                                class="fas fa-play"></i></button>
+                        <button class="control-btn" onclick="stopAudio()"><i class="fas fa-stop"></i></button>
+                        <button class="control-btn" onclick="skipForward()"><i class="fas fa-forward"></i></button>
+                    </div>
+
+                    <!-- Hız ve Ses Kontrolleri -->
+                    <div class="player-settings">
+                        <div class="speed-control">
+                            <label><i class="fas fa-running"></i> Hız:</label>
+                            <select id="speedControl" onchange="changeSpeed(this.value)">
+                                <option value="0.5">0.5x</option>
+                                <option value="0.75">0.75x</option>
+                                <option value="1" selected>1x</option>
+                                <option value="1.25">1.25x</option>
+                                <option value="1.5">1.5x</option>
+                                <option value="2">2x</option>
+                            </select>
+                        </div>
+                        <div class="volume-control-player">
+                            <label><i class="fas fa-volume-up"></i></label>
+                            <input type="range" id="lessonVolumeSlider" min="0" max="100" value="50"
+                                onchange="setLessonVolume(this.value)">
+                            <span id="lessonVolumeText">50%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Temel Kavramlar -->
+        <div class="section" id="basics">
+            <h2><i class="fas fa-book"></i> SQL Nedir? - Temel Kavramlar</h2>
+
+            <div class="database-visual">
+                <h3><i class="fas fa-university"></i> Veritabanı = Dijital Kütüphane</h3>
+                <p style="font-size: 1.1rem; margin: 10px 0;">SQL, veritabanıyla konuşmak için kullandığımız dildir!</p>
+
+                <div class="table-container">
+                    <div class="table-visual">
+                        <div class="table-header"><i class="fas fa-users"></i> Öğrenciler Tablosu</div>
+                        <div class="table-row">
+                            <div class="table-cell"><strong>ID</strong></div>
+                            <div class="table-cell"><strong>Ad</strong></div>
+                            <div class="table-cell"><strong>Soyad</strong></div>
+                            <div class="table-cell"><strong>Şehir</strong></div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-cell">1</div>
+                            <div class="table-cell">Ahmet</div>
+                            <div class="table-cell">Yılmaz</div>
+                            <div class="table-cell">Ankara</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-cell">2</div>
+                            <div class="table-cell">Ayşe</div>
+                            <div class="table-cell">Kaya</div>
+                            <div class="table-cell">İstanbul</div>
+                        </div>
+                    </div>
+
+                    <div class="table-visual">
+                        <div class="table-header"><i class="fas fa-book"></i> Dersler Tablosu</div>
+                        <div class="table-row">
+                            <div class="table-cell"><strong>ID</strong></div>
+                            <div class="table-cell"><strong>Ders Adı</strong></div>
+                            <div class="table-cell"><strong>Kredi</strong></div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-cell">101</div>
+                            <div class="table-cell">Veritabanı</div>
+                            <div class="table-cell">3</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-cell">102</div>
+                            <div class="table-cell">Matematik</div>
+                            <div class="table-cell">4</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4><i class="fas fa-lightbulb"></i> Önemli Analoji</h4>
+                <p><strong>Veritabanı</strong> = Kütüphane</p>
+                <p><strong>Tablo</strong> = Kitap rafı</p>
+                <p><strong>Satır</strong> = Bir kitap</p>
+                <p><strong>Sütun</strong> = Kitabın bir özelliği (başlık, yazar, sayfa sayısı...)</p>
+            </div>
+        </div>
+
+        <!-- CRUD İşlemleri -->
+        <div class="section" id="crud">
+            <h2><i class="fas fa-edit"></i> CRUD İşlemleri - Veritabanı Temel Operasyonları</h2>
+
+            <div class="crud-operations">
+                <div class="crud-item">
+                    <span class="crud-icon"><i class="fas fa-book-open"></i></span>
+                    <h3>CREATE (Okuma)</h3>
+                    <p><span class="highlight">SELECT</span> komutu</p>
+                    <p>"Bana şu bilgileri göster"</p>
+                </div>
+
+                <div class="crud-item">
+                    <span class="crud-icon"><i class="fas fa-plus"></i></span>
+                    <h3>READ (Ekleme)</h3>
+                    <p><span class="highlight">INSERT INTO</span> komutu</p>
+                    <p>"Yeni kayıt ekle"</p>
+                </div>
+
+                <div class="crud-item">
+                    <span class="crud-icon"><i class="fas fa-edit"></i></span>
+                    <h3>UPDATE (Güncelleme)</h3>
+                    <p><span class="highlight">UPDATE</span> komutu</p>
+                    <p>"Var olan kayıtları değiştir"</p>
+                </div>
+
+                <div class="crud-item">
+                    <span class="crud-icon"><i class="fas fa-trash"></i></span>
+                    <h3>DELETE (Silme)</h3>
+                    <p><span class="highlight">DELETE FROM</span> komutu</p>
+                    <p>"Kayıtları sil"</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> SÜPER ÖNEMLİ UYARI!</h4>
+                <p><strong>UPDATE</strong> ve <strong>DELETE</strong> komutlarını <strong>WHERE</strong> koşulu olmadan
+                    ASLA kullanma!</p>
+                <p>Tüm tabloyu etkileyebilir ve geri dönüşü olmayabilir! <i class="fas fa-skull-crossbones"></i></p>
+            </div>
+        </div>
+
+        <!-- İnteraktif SQL Çalışma Alanı -->
+        <div class="section" id="playground">
+            <h2><i class="fas fa-gamepad"></i> İnteraktif SQL Çalışma Alanı</h2>
+
+            <div class="playground">
+                <div class="playground-header">
+                    <h3><i class="fas fa-gamepad"></i> İnteraktif SQL Sorgu Oluşturucu</h3>
+                    <p>Aşağıdaki SQL komutlarına tıklayarak sorgunu oluştur! Tekrar tıklayarak kaldırabilirsin.</p>
+                </div>
+
+                <div class="playground-content">
+                    <div class="query-builder">
+                        <!-- Veritabanı Şeması Görüntüleyici Butonu - En Üstte -->
+                        <div
+                            style="margin-bottom: 25px; text-align: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 12px;">
+                            <button class="btn btn-sound" onclick="toggleSchemaViewer()"
+                                style="background: #764ba2; padding: 12px 24px; font-size: 1rem; font-weight: bold; border-radius: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                                <i class="fas fa-database"></i> Veritabanı Şeması ve Tüm Tablolar
+                            </button>
+                            <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.8); font-size: 0.9rem;">
+                                <i class="fas fa-lightbulb"></i> Sorgu yazmadan önce tabloları incele!
+                            </p>
+                        </div>
+
+                        <h4 style="margin-bottom: 20px;"><i class="fas fa-wrench"></i> SQL Komutları - Tıklayarak
+                            Ekle/Çıkar</h4>
+
+                        <div style="margin-bottom: 20px;">
+                            <h5 style="color: #68d391; margin-bottom: 8px;"><i class="fas fa-clipboard-list"></i> Temel
+                                Komutlar</h5>
+                            <div class="clickable-commands"
+                                style="grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));">
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="SELECT">SELECT</div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="FROM">FROM</div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="WHERE">WHERE</div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="GROUP BY">GROUP BY</div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="HAVING">HAVING</div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="ORDER BY">ORDER BY</div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="LIMIT">LIMIT</div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="DISTINCT">DISTINCT</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <h5 style="color: #68d391; margin-bottom: 8px;"><i class="fas fa-chart-bar"></i> Sütunlar ve
+                                Veriler</h5>
+                            <div class="clickable-commands">
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="*">* (Tümü)</div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="Ad">Ad</div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="Soyad">Soyad</div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="Ad, Soyad">Ad, Soyad
+                                </div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="Yas">Yas</div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="Sehir">Sehir</div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="DersAdi">DersAdi</div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="FinalNotu">FinalNotu
+                                </div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="Kredi">Kredi</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <h5 style="color: #68d391; margin-bottom: 8px;"><i class="fas fa-table"></i> Tablolar</h5>
+                            <div class="clickable-commands"
+                                style="grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));">
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="Ogrenciler">Ogrenciler
+                                </div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="Dersler">Dersler</div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="Notlar">Notlar</div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="Bolumler">Bolumler</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <h5 style="color: #68d391; margin-bottom: 8px;"><i class="fas fa-filter"></i> Koşullar ve
+                                Filtreler</h5>
+                            <div class="clickable-commands">
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="Yas > 20">Yas > 20</div>
+                                <div class="sql-block" onclick="toggleToken(this)" data-token="Yas < 25">Yas < 25</div>
+                                        <div class="sql-block" onclick="toggleToken(this)"
+                                            data-token="Sehir = 'Ankara'">Sehir = 'Ankara'</div>
+                                        <div class="sql-block" onclick="toggleToken(this)"
+                                            data-token="Sehir = 'İstanbul'">Sehir = 'İstanbul'</div>
+                                        <div class="sql-block" onclick="toggleToken(this)" data-token="Ad LIKE 'A%'">Ad
+                                            LIKE 'A%'</div>
+                                        <div class="sql-block" onclick="toggleToken(this)" data-token="FinalNotu > 70">
+                                            FinalNotu > 70</div>
+                                        <div class="sql-block" onclick="toggleToken(this)" data-token="AND">AND</div>
+                                        <div class="sql-block" onclick="toggleToken(this)" data-token="OR">OR</div>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 20px;">
+                                <h5 style="color: #68d391; margin-bottom: 8px;"><i class="fas fa-link"></i> JOIN
+                                    İşlemleri</h5>
+                                <div class="clickable-commands">
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="INNER JOIN">INNER
+                                        JOIN</div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="LEFT JOIN">LEFT JOIN
+                                    </div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="RIGHT JOIN">RIGHT
+                                        JOIN</div>
+                                    <div class="sql-block" onclick="toggleToken(this)"
+                                        data-token="ON Ogrenciler.ID = Notlar.OgrID">ON Ogrenciler.ID = Notlar.OgrID
+                                    </div>
+                                    <div class="sql-block" onclick="toggleToken(this)"
+                                        data-token="ON Dersler.DersID = Notlar.DersID">ON Dersler.DersID = Notlar.DersID
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 20px;">
+                                <h5 style="color: #68d391; margin-bottom: 8px;"><i class="fas fa-chart-bar"></i>
+                                    Aggregate Fonksiyonlar</h5>
+
+                                <!-- Hazır Aggregate Fonksiyonlar -->
+                                <div class="clickable-commands" style="margin-bottom: 15px;">
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="COUNT(*)">COUNT(*)
+                                    </div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="COUNT(DISTINCT Ad)">
+                                        COUNT(DISTINCT Ad)</div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="AVG(FinalNotu)">
+                                        AVG(FinalNotu)</div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="AVG(Yas)">AVG(Yas)
+                                    </div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="MAX(Yas)">MAX(Yas)
+                                    </div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="MAX(FinalNotu)">
+                                        MAX(FinalNotu)</div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="MIN(FinalNotu)">
+                                        MIN(FinalNotu)</div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="MIN(Yas)">MIN(Yas)
+                                    </div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="SUM(Kredi)">
+                                        SUM(Kredi)</div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="SUM(FinalNotu)">
+                                        SUM(FinalNotu)</div>
+                                </div>
+
+                                <!-- Custom Aggregate Builder -->
+                                <div
+                                    style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin-top: 10px;">
+                                    <h6 style="color: #68d391; margin: 0 0 10px 0; font-size: 0.9rem;"><i
+                                            class="fas fa-wrench"></i> Özel Aggregate
+                                        Fonksiyon Oluştur</h6>
+                                    <div
+                                        style="display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center;">
+                                        <select id="aggregateFunction"
+                                            style="padding: 6px 10px; border-radius: 5px; border: 1px solid #ccc; background: white;">
+                                            <option value="COUNT">COUNT</option>
+                                            <option value="AVG">AVG</option>
+                                            <option value="MAX">MAX</option>
+                                            <option value="MIN">MIN</option>
+                                            <option value="SUM">SUM</option>
+                                            <option value="COUNT(DISTINCT">COUNT(DISTINCT</option>
+                                        </select>
+                                        <input type="text" id="aggregateColumn"
+                                            placeholder="Sütun adı girin (örn: FinalNotu)"
+                                            style="padding: 6px 10px; border-radius: 5px; border: 1px solid #ccc; width: 100%;">
+                                        <button class="btn btn-sound" onclick="addCustomAggregate()"
+                                            style="padding: 6px 12px; font-size: 0.8rem;">
+                                            <i class="fas fa-plus"></i> Ekle
+                                        </button>
+                                    </div>
+                                    <div style="margin-top: 10px; font-size: 0.8rem; color: rgba(255,255,255,0.8);">
+                                        <i class="fas fa-lightbulb"></i> Örnekler: "FinalNotu", "Yas", "Kredi", "*"
+                                        (COUNT için), "Ad" (DISTINCT için)
+                                    </div>
+                                </div>
+
+                                <!-- Hızlı Ekleme Butonları -->
+                                <div style="margin-top: 12px;">
+                                    <h6 style="color: #68d391; margin: 0 0 8px 0; font-size: 0.9rem;"><i
+                                            class="fas fa-bolt"></i> Hızlı Ekle</h6>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                        <button class="quick-add-btn"
+                                            onclick="quickAddAggregate('COUNT', 'DISTINCT Sehir')">COUNT(DISTINCT
+                                            Şehir)</button>
+                                        <button class="quick-add-btn"
+                                            onclick="quickAddAggregate('AVG', 'Kredi')">AVG(Kredi)</button>
+                                        <button class="quick-add-btn"
+                                            onclick="quickAddAggregate('SUM', 'Yas')">SUM(Yaş)</button>
+                                        <button class="quick-add-btn"
+                                            onclick="quickAddAggregate('MAX', 'Kredi')">MAX(Kredi)</button>
+                                        <button class="quick-add-btn"
+                                            onclick="quickAddAggregate('MIN', 'Kredi')">MIN(Kredi)</button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div style="margin-bottom: 15px;">
+                                <h5 style="color: #68d391; margin-bottom: 8px;">📈 Sıralama ve Sınırlama</h5>
+                                <div class="clickable-commands">
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="ASC">ASC</div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="DESC">DESC</div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="Ad ASC">Ad ASC</div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="Yas DESC">Yas DESC
+                                    </div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="FinalNotu DESC">
+                                        FinalNotu DESC</div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="10">10</div>
+                                    <div class="sql-block" onclick="toggleToken(this)" data-token="5">5</div>
+                                </div>
+                            </div>
+
+
+
+                            <h4 style="margin: 20px 0 12px 0;"><i class="fas fa-bullseye"></i> SQL Sorgu Alanı</h4>
+                            <div class="query-display-zone" id="queryZone">
+                                <div class="query-tokens" id="queryTokens">
+                                    <p
+                                        style="color: rgba(255,255,255,0.7); text-align: center; width: 100%; margin: 60px 0;">
+                                        <i class="fas fa-gamepad"></i> Yukarıdaki komutlara tıklayarak SQL sorgunu
+                                        oluştur!<br>
+                                        <small><i class="fas fa-lightbulb"></i> İpucu: SELECT ve FROM ile başla</small>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="action-buttons">
+                                <button class="btn btn-run" onclick="runQuery()"><i class="fas fa-play"></i> Sorguyu
+                                    Çalıştır</button>
+                                <button class="btn btn-clear" onclick="clearQuery()"><i class="fas fa-trash"></i>
+                                    Temizle</button>
+                                <button class="btn btn-sound" onclick="playClickSound()"><i
+                                        class="fas fa-volume-up"></i> Ses Test</button>
+                                <button class="btn btn-sound" onclick="generateRandomQuery()"><i
+                                        class="fas fa-dice"></i> Rastgele Sorgu</button>
+                            </div>
+
+                            <div class="success-message" id="successMessage">
+                                <i class="fas fa-check-circle"></i> Sorgu başarıyla oluşturuldu ve çalıştırıldı!
+                            </div>
+
+                        </div>
+
+                        <div class="result-preview">
+                            <div class="result-grid">
+                                <div class="query-preview-panel">
+                                    <h4 style="margin-bottom: 15px;">📄 SQL Sorgu Önizlemesi</h4>
+                                    <div id="queryPreview"
+                                        style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 8px; font-family: 'Courier New', monospace; min-height: 120px; font-size: 1rem; line-height: 1.4;">
+                                        <span style="color: rgba(255,255,255,0.7);">Sorgun burada görünecek...</span>
+                                    </div>
+
+                                    <div
+                                        style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-top: 15px; font-size: 0.9rem;">
+                                        <h5 style="margin: 0 0 10px 0;">⌨️ Klavye Kısayolları:</h5>
+                                        <div
+                                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px;">
+                                            <div><kbd
+                                                    style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 3px;">Ctrl+Enter</kbd>
+                                                Çalıştır</div>
+                                            <div><kbd
+                                                    style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 3px;">Esc</kbd>
+                                                Temizle</div>
+                                            <div><kbd
+                                                    style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 3px;">Home</kbd>
+                                                En Üste</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="result-table-panel">
+                                    <h4 style="margin-bottom: 15px;"><i class="fas fa-table"></i> Sorgu Sonuçları</h4>
+                                    <div id="resultTable" style="max-height: 400px; overflow-y: auto;">
+                                        <div
+                                            style="padding: 40px 20px; text-align: center; color: rgba(255,255,255,0.7);">
+                                            <i class="fas fa-chart-bar"></i> Sorguyu çalıştır ve sonuçları gör!<br>
+                                            <small><i class="fas fa-lightbulb"></i> SELECT ve FROM ekleyerek
+                                                başla</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SELECT ve Filtreleme -->
+            <div class="section" id="select">
+                <h2><i class="fas fa-search"></i> SELECT Komutu ve Filtreleme</h2>
+
+                <div class="example-box">
+                    <h4><i class="fas fa-bullseye"></i> Temel SELECT Yapısı</h4>
+                    <div class="sql-command syntax-highlight">
+                        <span class="keyword">SELECT</span> <span class="string">sütun_adları</span><br>
+                        <span class="keyword">FROM</span> <span class="string">tablo_adı</span><br>
+                        <span class="keyword">WHERE</span> <span class="string">koşul</span><br>
+                        <span class="keyword">ORDER BY</span> <span class="string">sıralama</span>;
+                    </div>
+                </div>
+
+                <div class="interactive-demo">
+                    <h4><i class="fas fa-gamepad"></i> İnteraktif SQL Örnekleri</h4>
+
+                    <h5><i class="fas fa-clipboard-list"></i> Basit Seçim İşlemleri:</h5>
+                    <div class="sql-command">
+                        SELECT * FROM Ogrenciler;
+                        <span style="color: #68d391;">-- Tüm öğrencileri göster</span>
+                    </div>
+
+                    <div class="sql-command">
+                        SELECT Ad, Soyad FROM Ogrenciler;
+                        <span style="color: #68d391;">-- Sadece ad ve soyadları göster</span>
+                    </div>
+
+                    <h5><i class="fas fa-bullseye"></i> Filtreleme İşlemleri:</h5>
+                    <div class="sql-command">
+                        SELECT * FROM Ogrenciler WHERE Sehir = 'Ankara';
+                        <span style="color: #68d391;">-- Sadece Ankara'daki öğrenciler</span>
+                    </div>
+
+                    <div class="sql-command">
+                        SELECT Ad, Soyad FROM Ogrenciler WHERE Yas > 20;
+                        <span style="color: #68d391;">-- 20 yaşından büyük öğrenciler</span>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <h4>💡 WHERE Koşulları - Karşılaştırma Operatörleri</h4>
+                    <div
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
+                        <div style="background: white; padding: 10px; border-radius: 5px; text-align: center;">
+                            <strong>=</strong><br>Eşittir
+                        </div>
+                        <div style="background: white; padding: 10px; border-radius: 5px; text-align: center;">
+                            <strong>></strong><br>Büyüktür
+                        </div>
+                        <div style="background: white; padding: 10px; border-radius: 5px; text-align: center;">
+                            <strong>
+                                << /strong><br>Küçüktür
+                        </div>
+                        <div style="background: white; padding: 10px; border-radius: 5px; text-align: center;">
+                            <strong>!=</strong><br>Eşit değil
+                        </div>
+                        <div style="background: white; padding: 10px; border-radius: 5px; text-align: center;">
+                            <strong>LIKE</strong><br>Kalıp eşleştirme
+                        </div>
+                        <div style="background: white; padding: 10px; border-radius: 5px; text-align: center;">
+                            <strong>IN</strong><br>Listede var mı?
+                        </div>
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h4>🔍 LIKE Operatörü - Kalıp Eşleştirme</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h5>% (Yüzde) İşareti:</h5>
+                            <div class="sql-command">
+                                'A%' → A ile başlayanlar<br>
+                                '%an%' → İçinde 'an' geçenler<br>
+                                '%er' → 'er' ile bitenler
+                            </div>
+                        </div>
+                        <div>
+                            <h5>_ (Alt çizgi) İşareti:</h5>
+                            <div class="sql-command">
+                                'A_met' → A ile başlayıp 5 karakter<br>
+                                '_hmet' → 2. harfi 'h' olan 5 karakter
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aggregate Fonksiyonlar -->
+            <div class="section" id="functions">
+                <h2><i class="fas fa-chart-bar"></i> Aggregate Fonksiyonlar ve Gruplama</h2>
+
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">
+                    <div
+                        style="background: linear-gradient(135deg, #ff9a9e, #fecfef); padding: 20px; border-radius: 10px; text-align: center; color: white;">
+                        <h3>🔢 COUNT()</h3>
+                        <p>Sayıları sayar</p>
+                        <div class="sql-command" style="background: rgba(0,0,0,0.2); margin-top: 10px;">
+                            SELECT COUNT(*) FROM Ogrenciler;
+                        </div>
+                    </div>
+
+                    <div
+                        style="background: linear-gradient(135deg, #a8edea, #fed6e3); padding: 20px; border-radius: 10px; text-align: center; color: #333;">
+                        <h3>📈 AVG()</h3>
+                        <p>Ortalama alır</p>
+                        <div class="sql-command" style="background: rgba(0,0,0,0.1); margin-top: 10px; color: #333;">
+                            SELECT AVG(Not) FROM Notlar;
+                        </div>
+                    </div>
+
+                    <div
+                        style="background: linear-gradient(135deg, #fbc2eb, #a6c1ee); padding: 20px; border-radius: 10px; text-align: center; color: white;">
+                        <h3>⬆️ MAX()</h3>
+                        <p>En büyük değer</p>
+                        <div class="sql-command" style="background: rgba(0,0,0,0.2); margin-top: 10px;">
+                            SELECT MAX(Yas) FROM Ogrenciler;
+                        </div>
+                    </div>
+
+                    <div
+                        style="background: linear-gradient(135deg, #ffecd2, #fcb69f); padding: 20px; border-radius: 10px; text-align: center; color: #333;">
+                        <h3>⬇️ MIN()</h3>
+                        <p>En küçük değer</p>
+                        <div class="sql-command" style="background: rgba(0,0,0,0.1); margin-top: 10px; color: #333;">
+                            SELECT MIN(Not) FROM Notlar;
+                        </div>
+                    </div>
+
+                    <div
+                        style="background: linear-gradient(135deg, #a8e6cf, #dcedc1); padding: 20px; border-radius: 10px; text-align: center; color: #333;">
+                        <h3>➕ SUM()</h3>
+                        <p>Toplam alır</p>
+                        <div class="sql-command" style="background: rgba(0,0,0,0.1); margin-top: 10px; color: #333;">
+                            SELECT SUM(Kredi) FROM Dersler;
+                        </div>
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h4>👥 GROUP BY - Gruplama İşlemi</h4>
+                    <p><strong>Amaç:</strong> Verileri belirli kriterlere göre gruplamak ve her grup için ayrı hesaplama
+                        yapmak</p>
+
+                    <div class="sql-command">
+                        SELECT Sehir, COUNT(*) AS OgrenciSayisi<br>
+                        FROM Ogrenciler<br>
+                        GROUP BY Sehir;
+                    </div>
+
+                    <div style="background: white; border-radius: 8px; padding: 15px; margin: 10px 0;">
+                        <h5>📋 Sonuç:</h5>
+                        <div class="table-visual" style="width: 100%;">
+                            <div class="table-row">
+                                <div class="table-cell"><strong>Şehir</strong></div>
+                                <div class="table-cell"><strong>Öğrenci Sayısı</strong></div>
+                            </div>
+                            <div class="table-row">
+                                <div class="table-cell">Ankara</div>
+                                <div class="table-cell">15</div>
+                            </div>
+                            <div class="table-row">
+                                <div class="table-cell">İstanbul</div>
+                                <div class="table-cell">23</div>
+                            </div>
+                            <div class="table-row">
+                                <div class="table-cell">İzmir</div>
+                                <div class="table-cell">8</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ WHERE vs HAVING Farkı</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+                        <div style="background: #e6fffa; padding: 15px; border-radius: 8px;">
+                            <h5>🔍 WHERE</h5>
+                            <p><strong>Gruplamadan ÖNCE</strong> satırları filtreler</p>
+                            <div class="sql-command" style="background: #1a202c; font-size: 0.9rem;">
+                                WHERE Yas > 20
+                            </div>
+                        </div>
+                        <div style="background: #fff5f5; padding: 15px; border-radius: 8px;">
+                            <h5>🎯 HAVING</h5>
+                            <p><strong>Gruplamadan SONRA</strong> grupları filtreler</p>
+                            <div class="sql-command" style="background: #1a202c; font-size: 0.9rem;">
+                                HAVING COUNT(*) > 5
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JOIN İşlemleri -->
+            <div class="section" id="joins">
+                <h2><i class="fas fa-link"></i> JOIN İşlemleri - Tabloları Birleştirme</h2>
+
+                <div class="database-visual">
+                    <h3>🔗 JOIN Nasıl Çalışır?</h3>
+                    <div class="join-visual">
+                        <div class="join-table">
+                            <h4>👥 Öğrenciler</h4>
+                            <div style="font-size: 0.9rem; margin-top: 10px;">
+                                ID | Ad | Soyad<br>
+                                1 | Ahmet | Yılmaz<br>
+                                2 | Ayşe | Kaya
+                            </div>
+                        </div>
+
+                        <div class="join-arrow">🔗</div>
+
+                        <div class="join-table">
+                            <h4>📊 Notlar</h4>
+                            <div style="font-size: 0.9rem; margin-top: 10px;">
+                                OgrID | DersID | Not<br>
+                                1 | 101 | 85<br>
+                                2 | 101 | 92
+                            </div>
+                        </div>
+
+                        <div class="join-arrow">➡️</div>
+
+                        <div class="join-table" style="background: #f0fff4;">
+                            <h4>🎯 Birleşmiş Sonuç</h4>
+                            <div style="font-size: 0.9rem; margin-top: 10px;">
+                                Ad | Soyad | Not<br>
+                                Ahmet | Yılmaz | 85<br>
+                                Ayşe | Kaya | 92
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h4>🔗 INNER JOIN Örneği</h4>
+                    <div class="sql-command">
+                        SELECT O.Ad, O.Soyad, N.FinalNotu<br>
+                        FROM Ogrenciler AS O<br>
+                        INNER JOIN Notlar AS N ON O.OgrenciID = N.OgrenciID;
+                    </div>
+                    <p><strong>Açıklama:</strong> Sadece her iki tabloda da bulunan (notu olan) öğrencileri listeler.
+                    </p>
+                </div>
+
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0;">
+                    <div
+                        style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                        <h4>🎯 INNER JOIN</h4>
+                        <p>Her iki tabloda da eşleşen kayıtlar</p>
+                        <div style="font-size: 2rem; margin: 10px 0;">⚪⚪</div>
+                    </div>
+
+                    <div
+                        style="background: linear-gradient(135deg, #ffeaa7, #fab1a0); padding: 20px; border-radius: 10px; color: #333; text-align: center;">
+                        <h4>⬅️ LEFT JOIN</h4>
+                        <p>Sol tablodaki tüm kayıtlar + eşleşenler</p>
+                        <div style="font-size: 2rem; margin: 10px 0;">🔵⚪</div>
+                    </div>
+
+                    <div
+                        style="background: linear-gradient(135deg, #74b9ff, #0984e3); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                        <h4>➡️ RIGHT JOIN</h4>
+                        <p>Sağ tablodaki tüm kayıtlar + eşleşenler</p>
+                        <div style="font-size: 2rem; margin: 10px 0;">⚪🔵</div>
+                    </div>
+
+                    <div
+                        style="background: linear-gradient(135deg, #fd79a8, #e84393); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                        <h4>🔄 FULL JOIN</h4>
+                        <p>Her iki tablodaki tüm kayıtlar</p>
+                        <div style="font-size: 2rem; margin: 10px 0;">🔵🔵</div>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <h4>💡 JOIN Kullanırken Dikkat Et!</h4>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>ON koşulunu unutma:</strong> Hangi sütunların eşleşeceğini belirt</li>
+                        <li><strong>Takma ad kullan:</strong> AS ile tablolara kısa isimler ver (O, N gibi)</li>
+                        <li><strong>Sütun adlarını net belirt:</strong> O.Ad, N.FinalNotu gibi</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Alt Sorgular -->
+            <div class="section" id="advanced">
+                <h2><i class="fas fa-bolt"></i> İleri Seviye Konular</h2>
+
+                <div class="example-box">
+                    <h4>🔍 Alt Sorgular (Subqueries)</h4>
+                    <p>Bir sorgunun sonucunu başka bir sorguda kullanmak</p>
+
+                    <div class="sql-command">
+                        <span class="comment">-- Ortalamanın üzerinde not alan öğrenciler</span><br>
+                        SELECT Ad, Soyad, FinalNotu<br>
+                        FROM Ogrenciler O<br>
+                        INNER JOIN Notlar N ON O.OgrenciID = N.OgrenciID<br>
+                        WHERE N.FinalNotu > (<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;SELECT AVG(FinalNotu) FROM Notlar<br>
+                        );
+                    </div>
+
+                    <div style="background: #f7fafc; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                        <h5>📝 Çalışma Sırası:</h5>
+                        <ol>
+                            <li>Önce parantez içindeki sorgu çalışır → Ortalama bulunur</li>
+                            <li>Bu ortalama ana sorguda kullanılır</li>
+                            <li>Ortalamanın üzerindeki notlar listelenir</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="interactive-demo">
+                    <h4>🎮 Yaygın Alt Sorgu Örnekleri</h4>
+
+                    <h5>🥇 En yüksek notu alan öğrenci:</h5>
+                    <div class="sql-command">
+                        SELECT Ad, Soyad<br>
+                        FROM Ogrenciler O<br>
+                        INNER JOIN Notlar N ON O.OgrenciID = N.OgrenciID<br>
+                        WHERE N.FinalNotu = (SELECT MAX(FinalNotu) FROM Notlar);
+                    </div>
+
+                    <h5>🥈 İkinci en yüksek not:</h5>
+                    <div class="sql-command">
+                        SELECT MAX(FinalNotu)<br>
+                        FROM Notlar<br>
+                        WHERE FinalNotu < (SELECT MAX(FinalNotu) FROM Notlar); </div>
+
+                            <h5>📋 Belirli dersi alan öğrenciler:</h5>
+                            <div class="sql-command">
+                                SELECT Ad, Soyad<br>
+                                FROM Ogrenciler<br>
+                                WHERE OgrenciID IN (<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;SELECT OgrenciID FROM Notlar N<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;INNER JOIN Dersler D ON N.DersID = D.DersID<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;WHERE D.DersAdi = 'Fizik'<br>
+                                );
+                            </div>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>🔢 Window Functions (İleri Seviye)</h4>
+                        <p>Gruplama yapmadan satırlar üzerinde hesaplama yapma</p>
+
+                        <div class="sql-command">
+                            SELECT Ad, Soyad, FinalNotu,<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;ROW_NUMBER() OVER (ORDER BY FinalNotu DESC) AS Siralama,<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;AVG(FinalNotu) OVER () AS GenelOrtalama<br>
+                            FROM Ogrenciler O<br>
+                            INNER JOIN Notlar N ON O.OgrenciID = N.OgrenciID;
+                        </div>
+
+                        <div
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px;">
+                            <div
+                                style="background: white; padding: 10px; border-radius: 5px; text-align: center; border: 2px solid #4299e1;">
+                                <strong>ROW_NUMBER()</strong><br>Sıra numarası
+                            </div>
+                            <div
+                                style="background: white; padding: 10px; border-radius: 5px; text-align: center; border: 2px solid #48bb78;">
+                                <strong>RANK()</strong><br>Sıralama (eşitlerde aynı)
+                            </div>
+                            <div
+                                style="background: white; padding: 10px; border-radius: 5px; text-align: center; border: 2px solid #ed8936;">
+                                <strong>DENSE_RANK()</strong><br>Yoğun sıralama
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sınav İpuçları -->
+                <div class="section" id="tips">
+                    <h2><i class="fas fa-lightbulb"></i> Final Sınavı İçin Özel İpuçları</h2>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                        <div class="tip-box">
+                            <h4>🎯 Strateji 1: Adım Adım Çözüm</h4>
+                            <ol style="margin-left: 20px;">
+                                <li><strong>Soruyu iyi oku</strong> - Ne isteniyor?</li>
+                                <li><strong>Hangi tablolar gerekli?</strong> - İlişkileri belirle</li>
+                                <li><strong>Basit sorgulardan başla</strong> - Karmaşıklaştır</li>
+                                <li><strong>WHERE koşullarını ekle</strong> - Filtreleme yap</li>
+                                <li><strong>Sıralama ve gruplama</strong> - Son rötuşlar</li>
+                            </ol>
+                        </div>
+
+                        <div class="warning-box">
+                            <h4>⚠️ Yaygın Hatalar - Bunlara Dikkat!</h4>
+                            <ul style="margin-left: 20px;">
+                                <li><strong>WHERE vs HAVING</strong> karıştırma</li>
+                                <li><strong>JOIN'de ON koşulunu</strong> unutma</li>
+                                <li><strong>GROUP BY'da sütun</strong> eksik bırakma</li>
+                                <li><strong>UPDATE/DELETE'de WHERE</strong> unutma</li>
+                                <li><strong>Alt sorguların parantezini</strong> kapatmama</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="interactive-demo">
+                        <h4>🏆 Sınavda Çıkabilecek Tipik Sorular</h4>
+
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                                <h5>❓ Soru Tipi 1: En yüksek/düşük değer bulma</h5>
+                                <div class="sql-command">
+                                    -- En yüksek notu alan öğrenci<br>
+                                    SELECT TOP 1 Ad, Soyad, FinalNotu<br>
+                                    FROM Ogrenciler O<br>
+                                    INNER JOIN Notlar N ON O.OgrenciID = N.OgrenciID<br>
+                                    ORDER BY FinalNotu DESC;
+                                </div>
+                            </div>
+
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                                <h5>❓ Soru Tipi 2: Şehir/grup bazında sayım</h5>
+                                <div class="sql-command">
+                                    -- Her şehirde kaç öğrenci var?<br>
+                                    SELECT Sehir, COUNT(*) AS OgrenciSayisi<br>
+                                    FROM Ogrenciler<br>
+                                    GROUP BY Sehir<br>
+                                    ORDER BY OgrenciSayisi DESC;
+                                </div>
+                            </div>
+
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                                <h5>❓ Soru Tipi 3: Ortalama karşılaştırması</h5>
+                                <div class="sql-command">
+                                    -- Ortalamanın üzerinde not alanlar<br>
+                                    SELECT Ad, Soyad, FinalNotu<br>
+                                    FROM Ogrenciler O<br>
+                                    INNER JOIN Notlar N ON O.OgrenciID = N.OgrenciID<br>
+                                    WHERE FinalNotu > (SELECT AVG(FinalNotu) FROM Notlar);
+                                </div>
+                            </div>
+
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                                <h5>❓ Soru Tipi 4: İkinci/üçüncü en yüksek değer</h5>
+                                <div class="sql-command">
+                                    -- İkinci en yüksek not<br>
+                                    SELECT MAX(FinalNotu) AS IkinciEnYuksek<br>
+                                    FROM Notlar<br>
+                                    WHERE FinalNotu < (SELECT MAX(FinalNotu) FROM Notlar); </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 25px; border-radius: 15px; text-align: center; margin: 20px 0;">
+                            <h3>🎊 Final Öncesi Son Kontrol Listesi</h3>
+                            <div
+                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+                                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+                                    <h4>✅ Temel Komutlar</h4>
+                                    <p>SELECT, FROM, WHERE, INSERT, UPDATE, DELETE</p>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+                                    <h4>✅ Filtreleme</h4>
+                                    <p>WHERE, LIKE, IN, BETWEEN koşulları</p>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+                                    <h4>✅ Gruplama</h4>
+                                    <p>GROUP BY, HAVING, Aggregate fonksiyonlar</p>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+                                    <h4>✅ Birleştirme</h4>
+                                    <p>INNER JOIN, LEFT JOIN, Alt sorgular</p>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 25px; font-size: 1.2rem;">
+                                <strong><i class="fas fa-rocket"></i> Sen Yaparsın! Başarılar! <i
+                                        class="fas fa-bullseye"></i></strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hızlı Referans -->
+                    <div class="section">
+                        <h2><i class="fas fa-clipboard-list"></i> Hızlı Referans Kılavuzu</h2>
+
+                        <div
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                            <div
+                                style="background: #f7fafc; border: 2px solid #e2e8f0; border-radius: 10px; padding: 20px;">
+                                <h4 style="color: #2d3748; margin-bottom: 15px;">🔍 Temel SELECT Sözdizimi</h4>
+                                <div class="sql-command" style="font-size: 0.9rem;">
+                                    SELECT sütun1, sütun2<br>
+                                    FROM tablo_adı<br>
+                                    WHERE koşul<br>
+                                    GROUP BY sütun<br>
+                                    HAVING grup_koşulu<br>
+                                    ORDER BY sütun ASC/DESC<br>
+                                    LIMIT sayı;
+                                </div>
+                            </div>
+
+                            <div
+                                style="background: #f0fff4; border: 2px solid #68d391; border-radius: 10px; padding: 20px;">
+                                <h4 style="color: #2d3748; margin-bottom: 15px;">✏️ Veri Değiştirme</h4>
+                                <div class="sql-command" style="font-size: 0.9rem;">
+                                    INSERT INTO tablo VALUES (...);<br><br>
+                                    UPDATE tablo SET sütun=değer<br>
+                                    WHERE koşul;<br><br>
+                                    DELETE FROM tablo<br>
+                                    WHERE koşul;
+                                </div>
+                            </div>
+
+                            <div
+                                style="background: #fef5e7; border: 2px solid #ed8936; border-radius: 10px; padding: 20px;">
+                                <h4 style="color: #2d3748; margin-bottom: 15px;">🔗 JOIN Sözdizimi</h4>
+                                <div class="sql-command" style="font-size: 0.9rem;">
+                                    SELECT a.sütun, b.sütun<br>
+                                    FROM tablo1 a<br>
+                                    INNER JOIN tablo2 b<br>
+                                    ON a.id = b.id<br>
+                                    WHERE koşul;
+                                </div>
+                            </div>
+
+                            <div
+                                style="background: #e6fffa; border: 2px solid #4299e1; border-radius: 10px; padding: 20px;">
+                                <h4 style="color: #2d3748; margin-bottom: 15px;">📊 Aggregate Fonksiyonlar</h4>
+                                <div class="sql-command" style="font-size: 0.9rem;">
+                                    COUNT(*) - Satır sayısı<br>
+                                    AVG(sütun) - Ortalama<br>
+                                    MAX(sütun) - En büyük<br>
+                                    MIN(sütun) - En küçük<br>
+                                    SUM(sütun) - Toplam
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Veritabanı Şeması Modal -->
+                <div class="schema-modal" id="schemaModal" onclick="closeModalOnBackdrop(event)">
+                    <div class="schema-modal-content" onclick="event.stopPropagation()">
+                        <div class="schema-header">
+                            <h3 style="margin: 0; color: white;"><i class="fas fa-database"></i> Veritabanı Şeması ve
+                                Örnek Veriler</h3>
+                            <button class="modal-close" onclick="toggleSchemaViewer()">✕</button>
+                        </div>
+
+                        <div class="schema-tables">
+                            <div class="schema-table">
+                                <h5><i class="fas fa-users"></i> Ogrenciler Tablosu</h5>
+                                <div class="schema-columns">
+                                    <div class="schema-column">
+                                        <span class="column-name">OgrenciID</span>
+                                        <span class="column-type">INT PRIMARY KEY</span>
+                                    </div>
+                                    <div class="schema-column">
+                                        <span class="column-name">Ad</span>
+                                        <span class="column-type">VARCHAR(50)</span>
+                                    </div>
+                                    <div class="schema-column">
+                                        <span class="column-name">Soyad</span>
+                                        <span class="column-type">VARCHAR(50)</span>
+                                    </div>
+                                    <div class="schema-column">
+                                        <span class="column-name">Yas</span>
+                                        <span class="column-type">INT</span>
+                                    </div>
+                                    <div class="schema-column">
+                                        <span class="column-name">Sehir</span>
+                                        <span class="column-type">VARCHAR(30)</span>
+                                    </div>
+                                    <div class="schema-column">
+                                        <span class="column-name">BolumID</span>
+                                        <span class="column-type">INT FOREIGN KEY</span>
+                                    </div>
+                                </div>
+                                <div class="sample-data">
+                                    <strong>📋 Örnek Veriler:</strong><br>
+                                    1, Ahmet, Yılmaz, 22, Ankara, 1<br>
+                                    2, Ayşe, Kaya, 21, İstanbul, 2<br>
+                                    3, Mehmet, Demir, 23, İzmir, 1<br>
+                                    4, Fatma, Çelik, 20, Ankara, 3<br>
+                                    5, Ali, Şahin, 24, Bursa, 2
+                                </div>
+                            </div>
+
+                            <div class="schema-table">
+                                <h5><i class="fas fa-book"></i> Dersler Tablosu</h5>
+                                <div class="schema-columns">
+                                    <div class="schema-column">
+                                        <span class="column-name">DersID</span>
+                                        <span class="column-type">INT PRIMARY KEY</span>
+                                    </div>
+                                    <div class="schema-column">
+                                        <span class="column-name">DersAdi</span>
+                                        <span class="column-type">VARCHAR(100)</span>
+                                    </div>
+                                    <div class="schema-column">
+                                        <span class="column-name">Kredi</span>
+                                        <span class="column-type">INT</span>
+                                    </div>
+                                    <div class="schema-column">
+                                        <span class="column-name">BolumID</span>
+                                        <span class="column-type">INT FOREIGN KEY</span>
+                                    </div>
+                                </div>
+                                <div class="sample-data">
+                                    <strong>📋 Örnek Veriler:</strong><br>
+                                    101, Veritabanı Yönetimi, 3, 1<br>
+                                    102, Matematik, 4, 1<br>
+                                    103, Fizik, 3, 2<br>
+                                    104, Kimya, 4, 2<br>
+                                    105, Tarih, 2, 3
+                                </div>
+                            </div>
+
+                            <div class="schema-table">
+                                <h5><i class="fas fa-chart-bar"></i> Notlar Tablosu</h5>
+                                <div class="schema-columns">
+                                    <div class="schema-column">
+                                        <span class="column-name">NotID</span>
+                                        <span class="column-type">INT PRIMARY KEY</span>
+                                    </div>
+                                    <div class="schema-column">
+                                        <span class="column-name">OgrenciID</span>
+                                        <span class="column-type">INT FOREIGN KEY</span>
+                                    </div>
+                                    <div class="schema-column">
+                                        <span class="column-name">DersID</span>
+                                        <span class="column-type">INT FOREIGN KEY</span>
+                                    </div>
+                                    <div class="schema-column">
+                                        <span class="column-name">FinalNotu</span>
+                                        <span class="column-type">DECIMAL(5,2)</span>
+                                    </div>
+                                    <div class="schema-column">
+                                        <span class="column-name">VizeNotu</span>
+                                        <span class="column-type">DECIMAL(5,2)</span>
+                                    </div>
+                                </div>
+                                <div class="sample-data">
+                                    <strong>📋 Örnek Veriler:</strong><br>
+                                    1, 1, 101, 85.50, 78.00<br>
+                                    2, 1, 102, 92.00, 88.50<br>
+                                    3, 2, 101, 76.00, 82.00<br>
+                                    4, 3, 103, 89.50, 85.00<br>
+                                    5, 4, 104, 95.00, 90.00
+                                </div>
+                            </div>
+
+                            <div class="schema-table">
+                                <h5><i class="fas fa-university"></i> Bolumler Tablosu</h5>
+                                <div class="schema-columns">
+                                    <div class="schema-column">
+                                        <span class="column-name">BolumID</span>
+                                        <span class="column-type">INT PRIMARY KEY</span>
+                                    </div>
+                                    <div class="schema-column">
+                                        <span class="column-name">BolumAdi</span>
+                                        <span class="column-type">VARCHAR(100)</span>
+                                    </div>
+                                    <div class="schema-column">
+                                        <span class="column-name">FakulteAdi</span>
+                                        <span class="column-type">VARCHAR(100)</span>
+                                    </div>
+                                </div>
+                                <div class="sample-data">
+                                    <strong>📋 Örnek Veriler:</strong><br>
+                                    1, Bilgisayar Mühendisliği, Mühendislik<br>
+                                    2, Endüstri Mühendisliği, Mühendislik<br>
+                                    3, Tarih, Edebiyat<br>
+                                    4, Matematik, Fen Edebiyat
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            style="margin-top: 25px; text-align: center; color: rgba(255,255,255,0.9); font-size: 1rem; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                            <i class="fas fa-lightbulb"></i> <strong>Bu tablolar arasındaki ilişkileri kullanarak JOIN
+                                sorguları
+                                yazabilirsin!</strong><br>
+                            <i class="fas fa-link"></i> <strong>Primary Key</strong> (Birincil Anahtar) ve
+                            <strong>Foreign Key</strong> (Yabancı
+                            Anahtar) sütunları tablolar arasında bağlantı kurar.<br>
+                            <i class="fas fa-chart-bar"></i> <strong>OgrenciID, DersID, BolumID</strong> sütunları ile
+                            tabloları birleştirebilirsin.
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    // Ses değişkenleri
+                    let volume = 0.5;
+
+                    // Progress bar animasyonu
+                    window.addEventListener('load', function () {
+                        setTimeout(() => {
+                            document.getElementById('progressBar').style.width = '100%';
+                        }, 500);
+                    });
+
+                    // Sayfa kaydırma kontrolü
+                    window.addEventListener('scroll', function () {
+                        const scrollTopBtn = document.getElementById('scrollTopBtn');
+                        if (window.pageYOffset > 300) {
+                            scrollTopBtn.classList.add('visible');
+                        } else {
+                            scrollTopBtn.classList.remove('visible');
+                        }
+                    });
+
+                    // Yukarı çık fonksiyonu
+                    function scrollToTop() {
+                        playClickSound();
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    }
+
+                    // Ses fonksiyonları
+                    function playSuccessSound() {
+                        const audio = new Audio();
+                        audio.volume = volume;
+                        // Başarı sesi için frekans oluşturma
+                        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+
+                        oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                        oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+                        oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+
+                        gainNode.gain.setValueAtTime(volume * 0.3, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.5);
+                    }
+
+                    function playClickSound() {
+                        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+
+                        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                        gainNode.gain.setValueAtTime(volume * 0.2, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.1);
+                    }
+
+                    function setVolume(value) {
+                        volume = value / 100;
+                        document.getElementById('volumeText').textContent = value + '%';
+                    }
+
+                    // Ses kontrol paneli toggle
+                    function toggleAudioPanel() {
+                        const panel = document.getElementById('audioPanel');
+                        const toggle = document.getElementById('audioToggle');
+                        const controls = document.getElementById('audioControls') || document.querySelector('.audio-controls');
+
+                        if (panel.classList.contains('collapsed')) {
+                            // Açılıyor
+                            panel.classList.remove('collapsed');
+                            toggle.innerHTML = '<i class="fas fa-chevron-down"></i>';
+                            if (controls) {
+                                controls.classList.remove('minimized');
+                            }
+                        } else {
+                            // Kapanıyor - minimize et
+                            panel.classList.add('collapsed');
+                            toggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+                            if (controls) {
+                                controls.classList.add('minimized');
+                            }
+                        }
+                    }
+
+                    // Ses dersleri menüsü toggle
+                    function toggleAudioMenu() {
+                        const menu = document.getElementById('audioLessonsMenu');
+                        const btn = document.getElementById('audioMenuBtn');
+
+                        menu.classList.toggle('show');
+
+                        if (menu.classList.contains('show')) {
+                            btn.innerHTML = '<i class="fas fa-headphones"></i> Ses Dersleri <i class="fas fa-chevron-up"></i>';
+                        } else {
+                            btn.innerHTML = '<i class="fas fa-headphones"></i> Ses Dersleri <i class="fas fa-chevron-down"></i>';
+                        }
+                    }
+
+                    function playVeriGirisiSound() {
+                        const audio = document.getElementById('veriGirisiSound');
+                        audio.volume = volume;
+                        audio.currentTime = 0;
+                        audio.play().catch(e => console.log('Ses oynatılamadı:', e));
+                    }
+
+                    function playVeriGirisiSound2() {
+                        const audio = document.getElementById('veriGirisiSound2');
+                        audio.volume = volume;
+                        audio.currentTime = 0;
+                        audio.play().catch(e => console.log('Ses oynatılamadı:', e));
+                    }
+
+                    // Gelişmiş Ses Oynatıcı Fonksiyonları
+                    let currentAudio = null;
+                    let updateInterval = null;
+
+                    function loadLesson(audioId, title) {
+                        playClickSound();
+
+                        // Önceki sesi durdur
+                        if (currentAudio) {
+                            currentAudio.pause();
+                            currentAudio.currentTime = 0;
+                        }
+
+                        // Yeni sesi yükle
+                        currentAudio = document.getElementById(audioId);
+                        currentAudio.volume = volume;
+
+                        // Player'ı göster
+                        document.getElementById('audioPlayer').style.display = 'block';
+                        document.getElementById('currentLessonTitle').textContent = title;
+
+                        // Event listener'ları ekle
+                        currentAudio.addEventListener('loadedmetadata', updateTotalTime);
+                        currentAudio.addEventListener('timeupdate', updateProgress);
+                        currentAudio.addEventListener('ended', () => {
+                            document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>';
+                            currentAudio.currentTime = 0;
+                            updateProgress();
+                        });
+
+                        // Başlangıç değerleri
+                        updateTotalTime();
+                        updateProgress();
+                        document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>';
+                    }
+
+                    function togglePlayPause() {
+                        if (!currentAudio) return;
+
+                        playClickSound();
+
+                        if (currentAudio.paused) {
+                            currentAudio.play();
+                            document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i>';
+                            startProgressUpdates();
+                        } else {
+                            currentAudio.pause();
+                            document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>';
+                            stopProgressUpdates();
+                        }
+                    }
+
+                    function stopAudio() {
+                        if (!currentAudio) return;
+
+                        playClickSound();
+                        currentAudio.pause();
+                        currentAudio.currentTime = 0;
+                        document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>';
+                        updateProgress();
+                        stopProgressUpdates();
+                    }
+
+                    function skipBackward() {
+                        if (!currentAudio) return;
+
+                        playClickSound();
+                        currentAudio.currentTime = Math.max(0, currentAudio.currentTime - 10);
+                        updateProgress();
+                    }
+
+                    function skipForward() {
+                        if (!currentAudio) return;
+
+                        playClickSound();
+                        currentAudio.currentTime = Math.min(currentAudio.duration, currentAudio.currentTime + 10);
+                        updateProgress();
+                    }
+
+                    function changeSpeed(speed) {
+                        if (!currentAudio) return;
+
+                        playClickSound();
+                        currentAudio.playbackRate = parseFloat(speed);
+                    }
+
+                    function setLessonVolume(value) {
+                        volume = value / 100;
+                        document.getElementById('lessonVolumeText').textContent = value + '%';
+                        if (currentAudio) {
+                            currentAudio.volume = volume;
+                        }
+                    }
+
+                    function seekAudio(value) {
+                        if (!currentAudio || !currentAudio.duration) return;
+
+                        const seekTime = (value / 100) * currentAudio.duration;
+                        currentAudio.currentTime = seekTime;
+                        updateProgress();
+                    }
+
+                    function updateProgress() {
+                        if (!currentAudio || !currentAudio.duration) return;
+
+                        const progress = (currentAudio.currentTime / currentAudio.duration) * 100;
+                        document.getElementById('progressFill').style.width = progress + '%';
+                        document.getElementById('progressSlider').value = progress;
+
+                        // Şu anki zamanı güncelle
+                        const currentMinutes = Math.floor(currentAudio.currentTime / 60);
+                        const currentSeconds = Math.floor(currentAudio.currentTime % 60);
+                        document.getElementById('currentTime').textContent =
+                            `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')}`;
+                    }
+
+                    function updateTotalTime() {
+                        if (!currentAudio || !currentAudio.duration) return;
+
+                        const totalMinutes = Math.floor(currentAudio.duration / 60);
+                        const totalSeconds = Math.floor(currentAudio.duration % 60);
+                        document.getElementById('totalTime').textContent =
+                            `${totalMinutes}:${totalSeconds.toString().padStart(2, '0')}`;
+                    }
+
+                    function startProgressUpdates() {
+                        if (updateInterval) clearInterval(updateInterval);
+                        updateInterval = setInterval(updateProgress, 500);
+                    }
+
+                    function stopProgressUpdates() {
+                        if (updateInterval) {
+                            clearInterval(updateInterval);
+                            updateInterval = null;
+                        }
+                    }
+
+                    function closePlayer() {
+                        playClickSound();
+
+                        if (currentAudio) {
+                            currentAudio.pause();
+                            currentAudio.currentTime = 0;
+                        }
+
+                        document.getElementById('audioPlayer').style.display = 'none';
+                        stopProgressUpdates();
+                    }
+
+                    // Veritabanı Şeması Modal
+                    function toggleSchemaViewer() {
+                        playClickSound();
+                        const modal = document.getElementById('schemaModal');
+                        modal.classList.toggle('show');
+
+                        // Escape tuşu ile kapatma
+                        if (modal.classList.contains('show')) {
+                            document.addEventListener('keydown', handleModalEscape);
+                        } else {
+                            document.removeEventListener('keydown', handleModalEscape);
+                        }
+                    }
+
+                    function closeModalOnBackdrop(event) {
+                        if (event.target === event.currentTarget) {
+                            toggleSchemaViewer();
+                        }
+                    }
+
+                    function handleModalEscape(event) {
+                        if (event.key === 'Escape') {
+                            const modal = document.getElementById('schemaModal');
+                            if (modal.classList.contains('show')) {
+                                toggleSchemaViewer();
+                            }
+                        }
+                    }
+
+                    // Click-based SQL Builder
+                    let queryTokens = [];
+
+                    function toggleToken(element) {
+                        playClickSound();
+                        const token = element.getAttribute('data-token');
+
+                        if (element.classList.contains('selected')) {
+                            // Remove token
+                            element.classList.remove('selected');
+                            const index = queryTokens.indexOf(token);
+                            if (index > -1) {
+                                queryTokens.splice(index, 1);
+                            }
+                        } else {
+                            // Add token
+                            element.classList.add('selected');
+                            queryTokens.push(token);
+
+                            // Visual feedback
+                            element.style.transform = 'scale(1.1)';
+                            setTimeout(() => {
+                                element.style.transform = '';
+                            }, 200);
+                        }
+
+                        updateQueryDisplay();
+                    }
+
+                    function updateQueryDisplay() {
+                        const queryZone = document.getElementById('queryTokens');
+                        const queryPreview = document.getElementById('queryPreview');
+
+                        if (queryTokens.length === 0) {
+                            queryZone.innerHTML = `
+                                <p style="color: rgba(255,255,255,0.7); text-align: center; width: 100%; margin: 60px 0;">
+                                    🎮 Yukarıdaki komutlara tıklayarak SQL sorgunu oluştur!<br>
+                                    <small>💡 İpucu: SELECT ve FROM ile başla</small>
+                                </p>
+                            `;
+                            queryPreview.innerHTML = '<span style="color: rgba(255,255,255,0.7);">Sorgun burada görünecek...</span>';
+                            return;
+                        }
+
+                        // Build query tokens display
+                        let tokensHTML = '';
+                        queryTokens.forEach((token, index) => {
+                            tokensHTML += `
+                                <div class="query-token">
+                                    <span>${token}</span>
+                                    <button class="token-remove" onclick="removeToken(${index})">×</button>
+                                </div>
+                            `;
+                        });
+
+                        queryZone.innerHTML = tokensHTML;
+
+                        // Update query preview
+                        const formattedQuery = formatQuery(queryTokens.join(' '));
+                        queryPreview.innerHTML = `<span style="color: #68d391;">${formattedQuery};</span>`;
+                    }
+
+                    function removeToken(index) {
+                        playClickSound();
+                        const removedToken = queryTokens[index];
+                        queryTokens.splice(index, 1);
+
+                        // Remove selected class from corresponding button
+                        const buttons = document.querySelectorAll('.sql-block');
+                        buttons.forEach(button => {
+                            if (button.getAttribute('data-token') === removedToken) {
+                                button.classList.remove('selected');
+                            }
+                        });
+
+                        updateQueryDisplay();
+                    }
+
+                    function formatQuery(query) {
+                        // Basic SQL formatting with HTML line breaks
+                        return query
+                            .replace(/SELECT/g, '<br>SELECT')
+                            .replace(/FROM/g, '<br>FROM')
+                            .replace(/WHERE/g, '<br>WHERE')
+                            .replace(/GROUP BY/g, '<br>GROUP BY')
+                            .replace(/HAVING/g, '<br>HAVING')
+                            .replace(/ORDER BY/g, '<br>ORDER BY')
+                            .replace(/INNER JOIN/g, '<br>INNER JOIN')
+                            .replace(/LEFT JOIN/g, '<br>LEFT JOIN')
+                            .replace(/RIGHT JOIN/g, '<br>RIGHT JOIN')
+                            .replace(/^<br>/, '') // Remove first line break
+                            .trim();
+                    }
+
+                    function runQuery() {
+                        playSuccessSound();
+                        const resultTable = document.getElementById('resultTable');
+                        const successMessage = document.getElementById('successMessage');
+
+                        if (queryTokens.length === 0) {
+                            playClickSound();
+                            alert('❌ Önce SQL komutları ekleyin!');
+                            return;
+                        }
+
+                        // Başarı mesajı göster
+                        successMessage.classList.add('show');
+                        setTimeout(() => {
+                            successMessage.classList.remove('show');
+                        }, 3000);
+
+                        // Daha zengin örnek sonuç tabloları oluştur
+                        const sampleResults = generateSampleResults();
+
+                        resultTable.innerHTML = `
+                            <div class="table-visual" style="width: 100%; background: white; color: #333;">
+                                ${sampleResults.html}
+                            </div>
+                            <div style="padding: 15px; text-align: center; color: #48bb78; font-weight: bold; background: rgba(72, 187, 120, 0.1); border-radius: 8px; margin-top: 10px;">
+                                ✅ Sorgu başarıyla çalıştırıldı! ${sampleResults.count} kayıt bulundu.
+                                <br><small>⏱️ Çalışma süresi: ${Math.random().toFixed(2)} ms</small>
+                            </div>
+                        `;
+                    }
+
+                    function generateSampleResults() {
+                        const query = queryTokens.join(' ').toLowerCase();
+                        let results = [];
+                        let columns = [];
+
+                        // Analyze query to generate appropriate results
+                        if (query.includes('count')) {
+                            columns = ['Sayım'];
+                            results = [{ 'Sayım': Math.floor(Math.random() * 100) + 10 }];
+                        } else if (query.includes('avg')) {
+                            columns = ['Ortalama'];
+                            results = [{ 'Ortalama': (Math.random() * 30 + 70).toFixed(2) }];
+                        } else if (query.includes('max')) {
+                            columns = ['Maksimum'];
+                            results = [{ 'Maksimum': Math.floor(Math.random() * 100) + 80 }];
+                        } else if (query.includes('min')) {
+                            columns = ['Minimum'];
+                            results = [{ 'Minimum': Math.floor(Math.random() * 50) + 20 }];
+                        } else if (query.includes('group by')) {
+                            if (query.includes('sehir')) {
+                                columns = ['Şehir', 'Sayı'];
+                                results = [
+                                    { 'Şehir': 'Ankara', 'Sayı': 25 },
+                                    { 'Şehir': 'İstanbul', 'Sayı': 35 },
+                                    { 'Şehir': 'İzmir', 'Sayı': 18 }
+                                ];
+                            }
+                        } else {
+                            // Default student results
+                            columns = ['Ad', 'Soyad', 'Şehir', 'Yaş'];
+                            const names = ['Ahmet', 'Ayşe', 'Mehmet', 'Fatma', 'Ali', 'Zeynep', 'Murat', 'Elif'];
+                            const surnames = ['Yılmaz', 'Kaya', 'Demir', 'Çelik', 'Şahin', 'Koç', 'Arslan', 'Doğan'];
+                            const cities = ['Ankara', 'İstanbul', 'İzmir', 'Bursa', 'Antalya'];
+
+                            for (let i = 0; i < 6; i++) {
+                                results.push({
+                                    'Ad': names[Math.floor(Math.random() * names.length)],
+                                    'Soyad': surnames[Math.floor(Math.random() * surnames.length)],
+                                    'Şehir': cities[Math.floor(Math.random() * cities.length)],
+                                    'Yaş': Math.floor(Math.random() * 15) + 18
+                                });
+                            }
+                        }
+
+                        // Generate HTML
+                        let html = '<div class="table-row">';
+                        columns.forEach(col => {
+                            html += `<div class="table-cell"><strong>${col}</strong></div>`;
+                        });
+                        html += '</div>';
+
+                        results.forEach(row => {
+                            html += '<div class="table-row">';
+                            columns.forEach(col => {
+                                html += `<div class="table-cell">${row[col]}</div>`;
+                            });
+                            html += '</div>';
+                        });
+
+                        return { html, count: results.length };
+                    }
+
+                    function clearQuery() {
+                        playClickSound();
+
+                        // Clear all selections
+                        const buttons = document.querySelectorAll('.sql-block');
+                        buttons.forEach(button => {
+                            button.classList.remove('selected');
+                        });
+
+                        queryTokens = [];
+                        updateQueryDisplay();
+
+                        const resultTable = document.getElementById('resultTable');
+                        resultTable.innerHTML = `
+                            <div style="padding: 40px 20px; text-align: center; color: rgba(255,255,255,0.7);">
+                                📊 Sorguyu çalıştır ve sonuçları gör!<br>
+                                <small>💡 SELECT ve FROM ekleyerek başla</small>
+                            </div>
+                        `;
+                    }
+
+                    function generateRandomQuery() {
+                        playClickSound();
+                        clearQuery();
+
+                        const randomQueries = [
+                            ['SELECT', '*', 'FROM', 'Ogrenciler'],
+                            ['SELECT', 'Ad, Soyad', 'FROM', 'Ogrenciler', 'WHERE', 'Yas > 20'],
+                            ['SELECT', 'COUNT(*)', 'FROM', 'Ogrenciler', 'GROUP BY', 'Sehir'],
+                            ['SELECT', 'Sehir', 'COUNT(*)', 'FROM', 'Ogrenciler', 'GROUP BY', 'Sehir', 'ORDER BY', 'COUNT(*) DESC'],
+                            ['SELECT', 'AVG(FinalNotu)', 'FROM', 'Notlar'],
+                            ['SELECT', 'Ad, Soyad', 'FROM', 'Ogrenciler', 'WHERE', 'Sehir = \'Istanbul\'', 'ORDER BY', 'Ad ASC']
+                        ];
+
+                        const selectedQuery = randomQueries[Math.floor(Math.random() * randomQueries.length)];
+
+                        selectedQuery.forEach(token => {
+                            queryTokens.push(token);
+
+                            // Find and select the corresponding button
+                            const buttons = document.querySelectorAll('.sql-block');
+                            buttons.forEach(button => {
+                                if (button.getAttribute('data-token') === token) {
+                                    button.classList.add('selected');
+                                }
+                            });
+                        });
+
+                        updateQueryDisplay();
+
+                        // Auto run after short delay
+                        setTimeout(() => {
+                            runQuery();
+                        }, 1000);
+                    }
+
+                    // Custom Aggregate Function Builder
+                    function addCustomAggregate() {
+                        playClickSound();
+
+                        const funcSelect = document.getElementById('aggregateFunction');
+                        const columnInput = document.getElementById('aggregateColumn');
+
+                        const func = funcSelect.value;
+                        const column = columnInput.value.trim();
+
+                        if (!column) {
+                            alert('❌ Lütfen bir sütun adı girin!');
+                            return;
+                        }
+
+                        let token;
+                        if (func === 'COUNT(DISTINCT') {
+                            token = `COUNT(DISTINCT ${column})`;
+                        } else {
+                            token = `${func}(${column})`;
+                        }
+
+                        // Create a temporary button-like element and toggle it
+                        const tempElement = {
+                            getAttribute: () => token,
+                            classList: {
+                                contains: () => false,
+                                add: () => { },
+                                remove: () => { }
+                            },
+                            style: {}
+                        };
+
+                        // Add to tokens
+                        queryTokens.push(token);
+                        updateQueryDisplay();
+
+                        // Clear input
+                        columnInput.value = '';
+
+                        // Visual feedback
+                        columnInput.style.background = '#48bb78';
+                        setTimeout(() => {
+                            columnInput.style.background = 'white';
+                        }, 500);
+
+                        playSuccessSound();
+                    }
+
+                    // Quick Add Aggregate Functions
+                    function quickAddAggregate(func, column) {
+                        playClickSound();
+
+                        let token = `${func}(${column})`;
+
+                        // Add to tokens
+                        queryTokens.push(token);
+                        updateQueryDisplay();
+
+                        playSuccessSound();
+                    }
+
+                    // Allow Enter key in aggregate input
+                    document.addEventListener('DOMContentLoaded', function () {
+                        // Add event listener for Enter key in aggregate input (will be added after DOM loads)
+                        setTimeout(() => {
+                            const aggregateInput = document.getElementById('aggregateColumn');
+                            if (aggregateInput) {
+                                aggregateInput.addEventListener('keypress', function (e) {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        addCustomAggregate();
+                                    }
+                                });
+                            }
+                        }, 500);
+                    });
+
+                    // Smooth scrolling
+                    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                        anchor.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            playClickSound();
+                            const target = document.querySelector(this.getAttribute('href'));
+                            if (target) {
+                                target.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'start'
+                                });
+                            }
+                        });
+                    });
+
+                    // Hover efektleri için ek animasyonlar
+                    document.querySelectorAll('.section').forEach(section => {
+                        section.addEventListener('mouseenter', function () {
+                            this.style.transform = 'translateY(-5px)';
+                        });
+
+                        section.addEventListener('mouseleave', function () {
+                            this.style.transform = 'translateY(0)';
+                        });
+                    });
+
+                    // SQL komutlarına click to copy özelliği
+                    document.querySelectorAll('.sql-command').forEach(cmd => {
+                        cmd.style.cursor = 'pointer';
+                        cmd.title = 'Kopyalamak için tıkla';
+
+                        cmd.addEventListener('click', function () {
+                            playClickSound();
+                            const text = this.innerText;
+                            navigator.clipboard.writeText(text).then(() => {
+                                const originalBg = this.style.background;
+                                this.style.background = '#48bb78';
+                                setTimeout(() => {
+                                    this.style.background = originalBg;
+                                }, 500);
+                            });
+                        });
+                    });
+
+                    // Klavye kısayolları
+                    document.addEventListener('keydown', function (e) {
+                        // Ctrl+Enter ile sorgu çalıştır
+                        if (e.ctrlKey && e.key === 'Enter') {
+                            e.preventDefault();
+                            runQuery();
+                        }
+
+                        // Escape ile temizle
+                        if (e.key === 'Escape') {
+                            clearQuery();
+                        }
+
+                        // Home tuşu ile en üste çık
+                        if (e.key === 'Home') {
+                            e.preventDefault();
+                            scrollToTop();
+                        }
+                    });
+                </script>
+</body>
+
+</html>
