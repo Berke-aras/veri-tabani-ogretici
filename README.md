@@ -1,3 +1,5 @@
+# Buglar bulunmakta.
+
 # SQL Öğrenme Rehberi
 
 Modern ve interaktif SQL öğrenme platformu. Veri tabanı final sınavına hazırlık için kapsamlı görsel kılavuz.
